@@ -5,6 +5,7 @@ Login/Admin
 admin/login
 admin.aspx
 admin.asp
+cp/login.php
 administrator
 administrator.php
 administrator.aspx
