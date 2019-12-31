@@ -1,5 +1,5 @@
 # BlackDir
-Tool for find directory version 2
+Tool for find directory version 3
 # Install
 pip3 install -r requirements.txt
 # Usage:
