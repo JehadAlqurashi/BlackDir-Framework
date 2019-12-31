@@ -1,6 +1,8 @@
 # BlackDir
 Tool for find directory version 2
+# Install
+pip3 install -r requirements.txt
 # Usage:
 BlackDir.py --list /root/Desktop/list.txt --url http://google.com 
 
-![70374487-c9d50a80-1903-11ea-8d21-208d7ffdb2d8](https://user-images.githubusercontent.com/46041727/71510728-dba03280-285d-11ea-8b42-5d2925f6f327.PNG)
+![Capture](https://user-images.githubusercontent.com/46041727/71635084-64d6b100-2c32-11ea-8822-0af7c805f24d.PNG)
