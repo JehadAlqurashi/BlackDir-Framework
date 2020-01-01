@@ -1,6 +1,6 @@
 # BlackDir
 Tool for find directory and dump sites by dork version 3
-# Install
+# Installation
 pip3 install -r requirements.txt
 # Usage:
 BlackDir.py --list /root/Desktop/list.txt --url http://google.com 
