@@ -56,12 +56,12 @@ args = parser.parse_args()
 listuser = args.list
 dork = args.dork
 country = args.country
-level = args.level
+level = int(args.level)
 url = args.url
 if level != None:
-    levels = level
+    level = level
 else:
-    levels= 20
+    level= 20
 if country != None:
     site=country
 else:
@@ -73,7 +73,7 @@ else:
 
 thred = threading.Thread(target=Dir, args=(url, lists))
 if dork != None and url == None:
-    dorks(dork,site,levels)
+    dorks(dork,site,level)
 elif url != None and dork == None:
     print("Please Wait ... ")
     thred.start()
