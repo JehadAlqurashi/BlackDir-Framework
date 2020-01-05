@@ -1,5 +1,5 @@
 # BlackDir
-Tool for find directory and dump sites by dork version 3
+Tool for find directory and dump sites by dork version 4
 # Installation
 pip3 install -r requirements.txt
 # Usage:
