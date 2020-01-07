@@ -37,27 +37,42 @@ def dorks(dork,country,level): # function for Get Dork
         with open("Dorks.txt","a+") as file:
             file.write("\n"+se)
     print("Directory of file: ", os.getcwd() + "/" + "Droks.txt")
+def sub(url,subs):
+    for i in subs:
+        i = i.strip()
+        Purl = i+"."+url
+        try:
+            response = requests.get("http://"+Purl)
+            if response.status_code == 200:
+                print(Purl)
+        except requests.exceptions.ConnectionError:
+            pass
 parser = argparse.ArgumentParser("""
---url : Url to find Directory
---list : If you have list
---dork  : Dump all sites by dork
---level : If you chose level for Dork [Default=20]
---country : find Dork By Country
+--url               : Url to find Directory
+--list              : If you have list
+--dork              : Dump all sites by dork
+--level             : If you chose level for Dork [Default=20]
+--country           : find Dork By Country
+--subdomain         : find SubDomain of site
 ex:
 BlackDir.py --list /root/Desktop/list.txt --url http://google.com
 BlackDir.py --dork inurl:admin/login.php --country site:uk --level 100
+BlackDir.py --subdomain google.com
 """)
 parser.add_argument("-url","--url")
 parser.add_argument("-list","--list")
 parser.add_argument("-dork","--dork")
 parser.add_argument("-country","--country")
 parser.add_argument("-level","--level")
+parser.add_argument("-subdomain","--subdomain")
 args = parser.parse_args()
 listuser = args.list
 dork = args.dork
 country = args.country
 level = args.level
 url = args.url
+subdomains = args.subdomain
+sublist = open("sub.txt","r")
 if level != None:
     level = level
 else:
@@ -72,10 +87,12 @@ else:
     lists = open("list.txt","r")
 
 thred = threading.Thread(target=Dir, args=(url, lists))
-if dork != None and url == None:
+if dork != None and url == None and subdomains ==None:
     dorks(dork,site,int(level))
-elif url != None and dork == None:
+elif url != None and dork == None and subdomains == None:
     print("Please Wait ... ")
     thred.start()
+elif subdomains!= None and url == None and dork ==None :
+    sub(subdomains,sublist)
 else:
     logo()
