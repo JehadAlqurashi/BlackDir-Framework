@@ -1,7 +1,7 @@
 # BlackDir
- [1] Find Directories<br>
- [2] Find Sub Domain<br>
- [3] Dump Site by Dork
+ <h4>[1] Find Directories<br></h4>
+ <h4>[2] Find Sub Domain<br></h4>
+  <h4>[3] Dump Site by Dork </h4>
 
 # Installation:
 pip3 install -r requirements.txt
