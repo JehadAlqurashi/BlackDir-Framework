@@ -1,5 +1,8 @@
 # BlackDir
-Tool for find directory and dump sites by dork version 4
+## [1] Find Directories
+## [2] Find Sub Domain
+## [3] Dump Site by Dork
+
 # Installation
 pip3 install -r requirements.txt
 
