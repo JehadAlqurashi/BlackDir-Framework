@@ -3,7 +3,7 @@
  <h4>[2] Find Sub Domain<br></h4>
   <h4>[3] Dump Site by Dork </h4>
  <h4>[4] Scan WebSites [xss] </h4>
-# Installation:
+<h1>Installation:</h1>
 <h4>pip3 install -r requirements.txt</h4>
 
 ![Capture](https://user-images.githubusercontent.com/46041727/73861765-8db01e80-484e-11ea-89fe-ec0bd33ed812.PNG)
