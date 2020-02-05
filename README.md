@@ -6,8 +6,8 @@
 # Installation:
 <h4>pip3 install -r requirements.txt</h4>
 
+![Capture](https://user-images.githubusercontent.com/46041727/73861765-8db01e80-484e-11ea-89fe-ec0bd33ed812.PNG)
 
-![tt](https://user-images.githubusercontent.com/46041727/71911666-206f7780-3142-11ea-8e09-9b022c1a4aa0.jpg))
 
 ![Screenshot_2020-01-07_11-37-28](https://user-images.githubusercontent.com/46041727/71911758-4eed5280-3142-11ea-9db7-faddc43fc2f1.png)
 # Version:
