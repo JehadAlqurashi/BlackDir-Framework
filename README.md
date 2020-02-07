@@ -1,7 +1,7 @@
 # BlackDir
  <h4>[1] Find Directories<br></h4>
  <h4>[2] Find Sub Domain<br></h4>
-  <h4>[3] Dump Site by Dork </h4>
+  <h4>[3] Advanced Dorks Search </h4>
  <h4>[4] Scan WebSites [xss] </h4>
 <h1>Installation:</h1>
 <h4>pip3 install -r requirements.txt</h4>
