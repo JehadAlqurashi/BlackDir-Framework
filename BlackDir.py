@@ -193,9 +193,9 @@ def spider(url,lists):
                     print(Purl_New)
                 else:
                     pass
-def dorks(dork,country,level): # function for Get Dork
+def dorks(dork,country,level,text): # function for Get Dork
     print("Please Wait ...")
-    searching = dork+" "+country
+    searching = dork+" "+country+" "+text
     search = googlesearch.search(searching,stop=level)
     for se in search:
         with open("Dorks.txt","a+") as file:
@@ -217,6 +217,7 @@ parser = argparse.ArgumentParser("""
 --dork              : Dump all sites by dork
 --level             : If you chose level for Dork [Default=20]
 --country           : find Dork By Country
+--text              : Dump site text if in site
 --subdomain         : find SubDomain of site
 --scan              : Scan Site if vulnerable [xss]
 ex:
@@ -231,6 +232,7 @@ parser.add_argument("-country","--country")
 parser.add_argument("-level","--level")
 parser.add_argument("-subdomain","--subdomain")
 parser.add_argument("-scan","--scan")
+parser.add_argument("-text","--text")
 args = parser.parse_args()
 unknown = parser.parse_known_args()
 listuser = args.list
@@ -240,6 +242,7 @@ level = args.level
 url = args.spider
 subdomains = args.subdomain
 scanner = args.scan
+text = args.text
 sublist = open("sub.txt","r")
 if level != None:
     level = level
@@ -255,7 +258,7 @@ else:
     lists = open("list.txt","r")
 
 if dork != None and url == None and subdomains ==None and scanner == None:
-    dorks(dork,site,int(level))
+    dorks(dork,site,int(level),text)
 elif url != None and dork == None and subdomains == None and scanner ==  None:
     spider(url,lists)
 
