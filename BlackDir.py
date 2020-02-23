@@ -255,11 +255,14 @@ def spider(url, lists):
 
 
 def dorks(dork, country, level, text):  # function for Get Dork
-    country = ""
-    level = 10
-    text = ""
+    global searching
+    if country == None:
+        searching = dork + " " + text
+    elif text == None:
+        searching = dork + " " + country
+    else:
+        searching = dork + " " + country + " " + text
     print("Please Wait ...")
-    searching = dork + " " + country + " " + text
     search = googlesearch.search(searching, stop=level)
     for se in search:
         with open("Dorks.txt", "a+") as file:
