@@ -9,6 +9,7 @@
 ![Capture](https://user-images.githubusercontent.com/46041727/75120640-05c77280-569e-11ea-9121-c45c6631f524.PNG)
 
 
-![Capdture](https://user-images.githubusercontent.com/46041727/73861965-ea133e00-484e-11ea-81d7-75b35d906676.PNG)
+![Cdddapture](https://user-images.githubusercontent.com/46041727/75120661-1d066000-569e-11ea-9902-f9d92d5cf3f4.PNG)
+
 # Version:
 <b><h2>0.8</h2></b>
