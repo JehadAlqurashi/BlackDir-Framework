@@ -14,7 +14,7 @@ def logo():
 | __ )| | __ _  ___| | _|  _ \(_)_ __ 
 |  _ \| |/ _` |/ __| |/ / | | | | '__|
 | |_) | | (_| | (__|   <| |_| | | |   
-|____/|_|\__,_|\___|_|\_\____/|_|_| version:0.7
+|____/|_|\__,_|\___|_|\_\____/|_|_| version:0.8
   
 help: python3 BlackDir.py -h
 ==================================================
@@ -298,7 +298,8 @@ parser = argparse.ArgumentParser("""
 --country           : find Dork By Country
 --text              : Dump site text if in site
 --subdomain         : find SubDomain of site
---scan              : Scan Site if vulnerable [xss] [Sql Injection]
+--xss               : Scan Site if vulnerable [Xss]
+--sql               : Scan Site if vulnerable [Sql]
 ex:
 BlackDir.py --list /root/Desktop/list.txt --url http://google.com
 BlackDir.py --dork inurl:admin/login.php --country site:uk --level 100
