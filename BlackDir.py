@@ -18,7 +18,7 @@ def logo():
   
 help: python3 BlackDir.py -h
 ==================================================
-C0ded By RedVirus[@redvirus0]                                                                                        
+C0ded By RedVirus[@redvirus0] Sherlouk[@2r11]                                                                                
 """)
 
 
