@@ -18,9 +18,7 @@ def logo():
   
 help: python3 BlackDir.py -h
 ==================================================
-C0ded By RedVirus[@redvirus0]
-Group:BlackPearl[@bp.team]
-Site:blackpearl.team                                                                                                    
+C0ded By RedVirus[@redvirus0]                                                                                        
 """)
 
 
