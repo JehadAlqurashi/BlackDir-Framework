@@ -131,7 +131,7 @@ def sql_dorks(url):
                 post_sql = {}
                 post_sql[parmeter_name] = equal_parameter
                 response = requests.get(url, post_sql)
-            if url_source != response.text:
+            if "Warning:" != response.text:
                 print("Information: ")
                 print(colored("SQL Injection", "red"), colored("Type:Union Based", "grey"))
                 print("Url Vulnerable:", url)
