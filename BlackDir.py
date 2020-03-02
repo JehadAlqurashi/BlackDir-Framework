@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from urllib import request
 from urllib.parse import urlsplit, parse_qs
+from urllib import error
 from termcolor import colored
 import requests
 import argparse
@@ -18,7 +19,9 @@ def logo():
   
 help: python3 BlackDir.py -h
 ==================================================
-C0ded By RedVirus[@redvirus0] Sherlouk[@2r11]                                                                                
+C0ded By RedVirus[@redvirus0]
+Group:BlackPearl[@bp.team]
+Site:blackpearl.team                                                                                                    
 """)
 
 
@@ -106,29 +109,33 @@ def sql(url):  # Function F0r find Sql_Injection
                 pass
 
 def sql_dorks(url):
-    global equal_parameter, keys, equal_par, response
-    query = urlsplit(url).query
-    parameter = parse_qs(query)
-    url_request = request.urlopen(url).read()
-    url_source = BeautifulSoup(url_request,"html.parser")
-    values = list(parameter.values())
-    for index,item in enumerate(values):
-        equal_par = values[index]
-        for i in equal_par:
-            equal_parameter = str(i+"'")
-            keys = list(parameter.keys())
-        for index,item in enumerate(keys):
-            parmeter_name = keys[index]
-            parmeter_name = str(parmeter_name)
-            post_sql = {}
-            post_sql[parmeter_name] = equal_parameter
-            response = requests.get(url,post_sql)
-        if url_source != response.text:
-            print("Information: ")
-            print(colored("SQL Injection","red"),colored("Type:Union Based","grey"))
-            print("Url Vulnerable:",url)
-        else:
-            pass
+    global equal_parameter, response, keys
+    try:
+
+        query = urlsplit(url).query
+        parameter = parse_qs(query)
+        url_request = request.urlopen(url).read()
+        url_source = BeautifulSoup(url_request,"html.parser")
+        values = list(parameter.values())
+        for index,item in enumerate(values):
+            equal_par = values[index]
+            for i in equal_par:
+                equal_parameter = str(i+"'")
+                keys = list(parameter.keys())
+            for index,item in enumerate(keys):
+                parmeter_name = keys[index]
+                parmeter_name = str(parmeter_name)
+                post_sql = {}
+                post_sql[parmeter_name] = equal_parameter
+                response = requests.get(url,post_sql)
+            if url_source != response.text:
+                print("Information: ")
+                print(colored("SQL Injection","red"),colored("Type:Union Based","grey"))
+                print("Url Vulnerable:",url)
+            else:
+                pass
+    except error.HTTPError:
+        pass
 def xss(url):  #Function FOr Find xss vulnerability
     fast_crawl(url)
     global payload
@@ -222,8 +229,6 @@ def xss(url):  #Function FOr Find xss vulnerability
                 print("--------------------------------------------------------")
             else:
                 pass
-
-
 def spider(url, lists):
     fast_crawl(url)
     print(colored("We Crawling By This File >>"+os.getcwd()+"/"+"list.txt","grey"))
@@ -253,7 +258,8 @@ def spider(url, lists):
 
 
 def dorks(dork, country, level, text):  # function for Get Dork
-    global searching
+    global searching,list_url
+    list_url = []
     if country == None:
         searching = dork + " " + text
     elif text == None:
@@ -270,13 +276,31 @@ def dorks(dork, country, level, text):  # function for Get Dork
     if sql == "y" or sql == "Y" or sql == None:
             urls = open("Dorks.txt","r+")
             for i in urls:
-                i=i.strip()
-                sql_dorks(i)
+                list_url.append(i)
     else:
         pass
 
-
-def sub(url, subs):  # function for gussing subdomain
+def list_dorks(dork,level):
+    global list_sql, dorks
+    list_dork = []
+    list_sql = []
+    file = open(dork,"r+")
+    for dorks in file:
+        list_dork.append(dorks)
+    file.close()
+    for URL in list_dork:
+        print(list_dork)
+        print(colored("-------------------------------------------", "red"))
+        print(colored("Dork:"+URL, "red"))
+        print(colored("level: {}", "red").format(level))
+        print(colored("-------------------------------------------","red"))
+        searching = googlesearch.search(URL,stop=level)
+        for search in searching:
+            print(search)
+            list_sql.append(search)
+    for urls in list_sql:
+        sql_dorks(urls)
+def sub(url, subs):  #function for gussing subdomain
     for i in subs:
         i = i.strip()
         Purl = i + "." + url
@@ -298,6 +322,7 @@ parser = argparse.ArgumentParser("""
 --subdomain         : find SubDomain of site
 --xss               : Scan Site if vulnerable [Xss]
 --sql               : Scan Site if vulnerable [Sql]
+--listDork          : Scan list Dorks if Vulnerable [Sql]
 ex:
 BlackDir.py --list /root/Desktop/list.txt --url http://google.com
 BlackDir.py --dork inurl:admin/login.php --country site:uk --level 100
@@ -312,6 +337,7 @@ parser.add_argument("-subdomain", "--subdomain")
 parser.add_argument("-xss", "--xss")
 parser.add_argument("-text", "--text")
 parser.add_argument("-sql", "--sql")
+parser.add_argument("-listDork","--listDork")
 args = parser.parse_args()
 unknown = parser.parse_known_args()
 listuser = args.list
@@ -323,6 +349,7 @@ subdomains = args.subdomain
 scanner = args.xss
 text = args.text
 sql_inection = args.sql
+list_dork = args.listDork
 sublist = open("sub.txt", "r")
 if level != None:
     level = level
@@ -337,15 +364,17 @@ if listuser != None:
 else:
     lists = open("list.txt", "r")
 
-if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None:
+if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None:
     dorks(dork, site, int(level), text)
-elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None:
+elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None:
     spider(url, lists)
-elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None:
+elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None and list_dork == None:
     sub(subdomains, sublist)
-elif scanner != None and url == None and dork == None and subdomains == None and sql_inection == None:
+elif scanner != None and url == None and dork == None and subdomains == None and sql_inection == None and list_dork == None:
     xss(scanner)
-elif sql_inection != None and scanner == None and url == None and dork == None and subdomains == None:
+elif sql_inection != None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None:
     sql(sql_inection)
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork != None:
+    list_dorks(list_dork,int(level))
 else:
     logo()
