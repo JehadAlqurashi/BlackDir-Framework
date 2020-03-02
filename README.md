@@ -2,7 +2,8 @@
  <h4>[1] Find Directories<br></h4>
  <h4>[2] Find Sub Domain<br></h4>
   <h4>[3] Advanced Dorks Search </h4>
- <h4>[4] Scan WebSites [Xss,Sql] </h4>
+  <h4>[4] Scan list of Dorks </h4>
+ <h4>[5] Scan WebSites [Xss,Sql] </h4>
 <h1>Installation:</h1>
 <h4>pip3 install -r requirements.txt</h4>
 
