@@ -114,7 +114,6 @@ def sql(url):  # Function F0r find Sql_Injection
 def sql_dorks(url):
     global equal_parameter, response, keys
     try:
-
         query = urlsplit(url).query
         parameter = parse_qs(query)
         url_request = request.urlopen(url).read()
@@ -131,7 +130,8 @@ def sql_dorks(url):
                 post_sql = {}
                 post_sql[parmeter_name] = equal_parameter
                 response = requests.get(url, post_sql)
-            if "Warning:" in response.text:
+            if "Warning" in response.text:
+                print(colored("Please Wait .. ","red"))
                 print("Information: ")
                 print(colored("SQL Injection", "red"), colored("Type:Union Based", "grey"))
                 print("Url Vulnerable:", url)
