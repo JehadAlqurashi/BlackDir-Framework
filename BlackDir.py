@@ -8,8 +8,6 @@ import argparse
 import googlesearch
 import os
 import time
-
-
 def logo():
     print("""
 \x1b[30m
@@ -29,13 +27,14 @@ def fast_crawl(url):
     global list_direct, url_access, url_pure
     list_direct_pure = []
     list_direct = []
-
-    if "https" in url or "http" and "www":
+    if "https" in url:
         url_pure = url.strip("https://www.")
-    elif "https" or "http":
-        url_pure = url.strip("https://")
-    list_direct.append(url)
-    url_request = request.urlopen(url)
+        url_pure = "http://"+url_pure
+    elif "www." in url:
+        url_pure = url.strip("https://www.")
+        url_pure = "http://" +url
+    list_direct.append(url_pure)
+    url_request = request.urlopen(url_pure)
     url_source = BeautifulSoup(url_request, "html.parser")
     for link in url_source.find_all("a"):
         link_pure = link.get("href")
@@ -48,17 +47,22 @@ def fast_crawl(url):
                 if link_pure in list_direct:
                     pass
                 else:
-                    url_generate = url + "/" + link_pure
+                    url_generate = url_pure + "/" + link_pure
                     if url_generate in list_direct:
                         pass
                     else:
-                        list_direct.append(url + "/" + link_pure)
+                        list_direct.append(url_pure + "/" + link_pure)
     for sec_url in list_direct:
-        url_request = request.urlopen(sec_url).read()
-        url_source = BeautifulSoup(url_request, "html.parser")
+        try:
+            url_request = request.urlopen(sec_url).read()
+            url_source = BeautifulSoup(url_request, "html.parser")
+        except error.URLError:
+            pass
         for urls in url_source.findAll("a"):
             urls_find = urls.get("href")
-            if "#" in urls_find or " " in urls_find or "http" in urls_find or "https" in urls_find or "www" in urls_find or "@" in urls_find:
+            if urls_find == None:
+                urls_find="#"
+            if "#" in urls_find or " " in urls_find or "http" in urls_find or "https" in urls_find or "www" in urls_find or "@" in urls_find or urls_find == "#":
                 pass
             else:
                 urls_avi = url + "/" + urls_find
@@ -72,14 +76,20 @@ def fast_crawl(url):
                         if urls_find == "":
                             pass
                         else:
-                            list_direct_pure.append(url + "/" + urls_find)
+                            if url in urls_find:
+                                pass
+                            else:
+                                list_direct_pure.append(url_pure +"/"+ urls_find)
     for urls_error in list_direct_pure:
         if urls_error in list_direct:
             pass
         else:
             list_direct.append(urls_error)
     for urls_final in list_direct:
-        print(colored("Found[+]\n" + urls_final, "green"))
+        if urls_final == url_pure:
+            pass
+        else:
+             print(colored("Found[+]\n" + urls_final, "green"))
     print(colored("Fast spider Done ..", "red"))
 
 
@@ -89,7 +99,7 @@ def sql(url):  # Function F0r find Sql_Injection
     for urls in list_direct:
         query = urlsplit(urls).query
         parameter = parse_qs(query)
-        url_request = request.urlopen(urls).read()
+        url_request = request.urlopen(urls).read().decode(encoding="iso-8859-1")
         url_source = BeautifulSoup(url_request, "html.parser")
         values = list(parameter.values())
         for index, item in enumerate(values):
@@ -237,33 +247,18 @@ def xss(url):  # Function FOr Find xss vulnerability
 
 
 def spider(url, lists):
+    print(colored("Please Wait We Spider all Directories . .","red"))
     fast_crawl(url)
     print(colored("We Crawling By This File >>" + os.getcwd() + "/" + "list.txt", "grey"))
     for i in lists:
         i = i.strip()
-        Purl = url + "/" + i
+        Purl = url_pure + "/" + i
         response = requests.get(Purl)
         if response.status_code == 200:
             print("\x1b[32mFound[+]")
-            print(Purl)
+            print(response.url)
         else:
             pass
-    lists = open("list.txt", "r")
-    if list_dir != None:
-        print('Please Wait We Crawling This Directory ', colored(Purl, "red"))
-        for direct in list_dir:
-            for i in lists:
-                Purl_New = direct + "/" + i
-                new_response = requests.get(Purl_New)
-                if new_response.status_code == 200:
-                    list_dir.append(Purl_New)
-                    print("\x1b[32mFound[+]")
-                    print(Purl_New)
-                else:
-                    pass
-    print(list_dir)
-
-
 def dorks(dork, country, level, text):  # function for Get Dork
     global searching, list_url
     list_url = []
@@ -289,37 +284,53 @@ def dorks(dork, country, level, text):  # function for Get Dork
 
 
 def list_dorks(dork, level):
-    global list_sql, dorks
+    global list_sql, dorks, search
     list_dork = []
     list_sql = []
+
     file = open(dork, "r+")
     for dorks in file:
         list_dork.append(dorks)
     file.close()
-    for URL in list_dork:
-        print(colored("-------------------------------------------", "red"))
-        print(colored("Dork:" + URL, "red"))
-        print(colored("level: {}", "red").format(level))
-        print(colored("-------------------------------------------", "red"))
-        searching = googlesearch.search(URL, stop=level)
-        for search in searching:
-            print(search)
-            list_sql.append(search)
+    for userAgent in googlesearch.get_random_user_agent():
+        for URL in list_dork:
+            print(colored("-------------------------------------------", "red"))
+            print(colored("Dork:" + URL, "red"))
+            print(colored("level: {}", "red").format(level))
+            print(colored("-------------------------------------------", "red"))
+            print(URL)
+            try:
+                searching = googlesearch.search(URL, stop=level, user_agent=userAgent,num=15)
+                time.sleep(40)
+                for search in searching:
+                    print(search)
+                Req = requests.get(search)
+                if Req.status_code == 200:
+                    list_sql.append(search)
+                else:
+                    pass
+            except requests.exceptions.ConnectionError:
+                pass
     for urls in list_sql:
         sql_dorks(urls)
 
-
 def sub(url, subs):  # function for gussing subdomain
+    if "https" in url:
+        url = url.strip("https://")
+    elif "http" in url:
+        url = url.strip("http://")
     for i in subs:
         i = i.strip()
         Purl = i + "." + url
         try:
             response = requests.get("http://" + Purl)
             if response.status_code == 200:
-                print("http://" + Purl)
-        except requests.exceptions.ConnectionError:
+                print(colored("Status_Code:200"))
+                print(colored("Url:http://{0}","green").format(Purl))
+            else:
+                pass
+        except:
             pass
-
 
 parser = argparse.ArgumentParser("""
 --spider            : Url to find Directory
