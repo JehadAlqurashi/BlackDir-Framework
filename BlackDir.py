@@ -298,7 +298,6 @@ def list_dorks(dork, level):
             print(colored("Dork:" + URL, "red"))
             print(colored("level: {}", "red").format(level))
             print(colored("-------------------------------------------", "red"))
-            print(URL)
             try:
                 searching = googlesearch.search(URL, stop=level, user_agent=userAgent,num=15)
                 time.sleep(40)
