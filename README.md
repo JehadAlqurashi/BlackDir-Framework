@@ -5,7 +5,7 @@
   <h4>[4] Scan list of Dorks </h4>
  <h4>[5] Scan WebSites [Xss,Sql] </h4>
 <h1>Installation:</h1>
-<div style="color:red;">
+<div style="background-color:grey;">
    <h4>git clone https://github.com/RedVirus0/BlackDir-Framework.git</h4>
    <h4>cd BlackDir</h4>
    <h4>pip3 install -r requirements.txt</h4>
