@@ -1,9 +1,9 @@
 # BlackDir-Framework
- <h4>[1] Spider Directories<br></h4>
- <h4>[2] Find Sub Domain<br></h4>
-  <h4>[3] Advanced Dorks Search </h4>
-  <h4>[4] Scan list of Dorks </h4>
- <h4>[5] Scan WebSites [Xss,Sql] </h4>
+ <p>[1] Spider Directories<br></p>
+ <p>[2] Find Sub Domain<br></p>
+  <p>[3] Advanced Dorks Search </p>
+  <p>[4] Scan list of Dorks </p>
+ <p>[5] Scan WebSites [Xss,Sql] </p>
 <h1>Installation:</h1>
 
    <p>git clone https://github.com/RedVirus0/BlackDir-Framework.git</p>
