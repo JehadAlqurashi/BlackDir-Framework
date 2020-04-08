@@ -6,7 +6,7 @@
  <p>[5] Scan WebSites [Xss,Sql] </p>
 <h1>Installation:</h1>
 
-   <p>git clone https://github.com/RedVirus0/BlackDir-Framework.git</p>
+***git clone https://github.com/RedVirus0/BlackDir-Framework.git***
    <p>cd BlackDir</p>
    <p>pip3 install -r requirements.txt</p>
    <p>python3 BlackDir.py<p>
