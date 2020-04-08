@@ -1,14 +1,50 @@
-from bs4 import BeautifulSoup
+import time
+import datetime
 from urllib import request
 from urllib.parse import urlsplit, parse_qs
 from urllib import error
-from termcolor import colored
-import requests
-import argparse
-import googlesearch
 import os
-import time
-import datetime
+try:
+    from bs4 import BeautifulSoup
+except:
+    os.system("clear")
+    print(colored("\nPlease Install bs4 library command install:\npip3 install bs4", "red"))
+    exit()
+
+#----------------------------------
+try:
+    from termcolor import colored
+except:
+    os.system("clear")
+    print(colored("\nPlease Install termcolor library command install:\npip3 install termcolor", "red"))
+    exit()
+
+#--------------------------------
+
+try:
+    import requests
+except:
+    os.system("clear")
+    print(colored("\nPlease Install requests library command install:\npip3 install requests","red"))
+    exit()
+
+#--------------------------------
+
+try:
+    import argparse
+except:
+    os.system("clear")
+    print(colored("\nPlease Install argparse library command install:\npip3 install argparse", "red"))
+    exit()
+
+# --------------------------------
+
+try:
+    import googlesearch
+except:
+    os.system("clear")
+    print(colored("\nPlease Install google library command install:\npip3 install google", "red"))
+    exit()
 
 
 def logo():
@@ -93,8 +129,7 @@ def fast_crawl(url):
             print(colored("Found[+]\n" + urls_final, "green"))
     print(colored("Fast spider Done ..", "red"))
 
-
-def sql(url):  # Function F0r find Sql_Injection
+def sql(url):  #Function F0r find Sql_Injection
     global equal_parameter, keys, equal_par, response
     fast_crawl(url)
     for urls in list_direct:
@@ -121,34 +156,42 @@ def sql(url):  # Function F0r find Sql_Injection
             else:
                 pass
 
-
 def sql_dorks(url):
-    global equal_parameter, response, keys
+    global equal_parameter, response, keys, request_status
     try:
-        query = urlsplit(url).query
-        parameter = parse_qs(query)
-        url_request = request.urlopen(url).read().decode(encoding="iso-8859-1")
-        url_source = BeautifulSoup(url_request, "html.parser")
-        values = list(parameter.values())
-        for index, item in enumerate(values):
-            equal_par = values[index]
-            for i in equal_par:
-                equal_parameter = str(i + "'")
-                keys = list(parameter.keys())
-            for index, item in enumerate(keys):
-                parmeter_name = keys[index]
-                parmeter_name = str(parmeter_name)
-                post_sql = {}
-                post_sql[parmeter_name] = equal_parameter
-                response = requests.get(url, post_sql)
-            if "Warning" in response.text:
-                print(colored("Please Wait .. ", "red"))
-                print("Information: ")
-                print(colored("SQL Injection", "red"), colored("Type:Union Based", "grey"))
-                print("Url Vulnerable:", url)
+        time.sleep(1.0)
+        try:
+            request_status = requests.get(url)
+            if request_status.status_code == 200:
+                print(colored("Request Status:", "red"), colored(request_status.status_code, "green"))
+                print("Url:", colored(url, "green"))
+                query = urlsplit(url).query
+                parameter = parse_qs(query)
+                url_request = request.urlopen(url).read().decode(encoding="iso-8859-1")
+                url_source = BeautifulSoup(url_request, "html.parser")
+                values = list(parameter.values())
+                for index, item in enumerate(values):
+                    equal_par = values[index]
+                    for i in equal_par:
+                        equal_parameter = str(i + "'")
+                        keys = list(parameter.keys())
+                    for index, item in enumerate(keys):
+                        parmeter_name = keys[index]
+                        parmeter_name = str(parmeter_name)
+                        post_sql = {}
+                        post_sql[parmeter_name] = equal_parameter
+                        response = requests.get(url, post_sql)
+                    if "Warning" in response.text:
+                        print(colored("SQL Injection", "red"), colored("Type:Union Based", "grey"))
+                        print(colored("Url Vulnerable:","green"), colored(url, "red"))
+                    else:
+                        print(colored("Url Not Vulnerable: ", "red"), colored(response.url, "green"))
             else:
-                pass
-    except error.HTTPError:
+                print(colored("Request Status:" + request_status.status_code, "red"))
+                print("Url:", request_status.url)
+        except requests.exceptions.ConnectionError:
+            pass
+    except:
         pass
 
 
@@ -231,7 +274,6 @@ def xss(url):  # Function FOr Find xss vulnerability
             response = requests.post(url, post_data_post)  # POST
             if payload in response.text:
                 print(colored("Information:", "grey"))
-                print("")
                 print(colored("[!] Url Vulnerable {}", "green").format(url))
                 print("--------------------------------------------------------")
                 print(colored("[!] Is Vulnerable [xss] Payload >> {}", "green").format(payload))
@@ -239,7 +281,6 @@ def xss(url):  # Function FOr Find xss vulnerability
                 print(colored("[!] Method:", "red") + colored("POST", "grey"))
                 print("--------------------------------------------------------")
                 print(colored("Source:", "green"))
-                print("")
                 print(response.text)
                 print("--------------------------------------------------------")
             else:
@@ -261,24 +302,38 @@ def spider(url, lists):
             pass
 
 
-def dorks(dork, country, level, text):  # function for Get Dork
-    global searching, list_url, dork_search
-    if country == None and text != None:
-        dork_search = dork + "intext:" + text
-    if text == None and country != None:
-        dork_search = dork + "site:" + country
-    if text == None and country == None:
-        dork_search = dork
-    print(colored("Please Wait .. ", "red"))
-    time.sleep(40)
-    searching = googlesearch.search(dork_search, stop=level)
-    print(colored("-------------------------------------------", "red"))
-    print(colored("Dork:" + dork, "red"))
-    print(colored("-------------------------------------------", "red"))
-    print(colored("level: {}", "red").format(level))
-    for search in searching:
-        print(search)
-    print(colored("Finished Dork Search", "grey"))
+def dorks(dork, country, text):  # function for Get Dork
+    global soup
+    list_of_url = []
+    results = []
+    user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0"
+    headers = {'user-agent':user_agent}
+    link = "https://google.com/search?q=inurl:"+dork
+    rep = requests.get(link,headers=headers)
+    if rep.status_code == 200:
+        soup = BeautifulSoup(rep.content,"html.parser")
+    for g in soup.find_all('div', class_='r'):
+        anchors = g.find_all('a')
+        if anchors:
+            link = anchors[0]['href']
+            title = g.find('h3').text
+            item = {
+                "title": title,
+                "link": link
+            }
+            results.append(item)
+    for dic in results:
+        list_of_link=list(dic.values())
+        print("\n")
+        print(colored("Title Of Link:","green"),list_of_link[0],"\n")
+        print(colored("Link:","green"),list_of_link[1],"\n")
+        list_of_url.append(list_of_link[1])
+    line = input(colored("You Want Scan All URLs [Y/N]: ","grey"))
+    if line == "Y" or line== "y" or line == None:
+        for urls in list_of_url:
+            sql_dorks(urls)
+    else:
+        pass
 
 
 def list_dorks(dork, level):
@@ -311,7 +366,7 @@ def list_dorks(dork, level):
         sql_dorks(urls)
 
 
-def sub(url, subs):  # function for gussing subdomain
+def sub(url, subs):  #function for gussing subdomain
     if "https" in url:
         url = url.strip("https://")
     elif "http" in url:
@@ -333,7 +388,7 @@ def sub(url, subs):  # function for gussing subdomain
 def update():
     global year, month, day
     print(colored("Please wait we find update ..","green"))
-    date_source = datetime.date(2020, 3, 20)
+    date_source = datetime.date(2020, 4, 8)
     request_date = request.urlopen(
         "https://raw.githubusercontent.com/RedVirus0/BlackDir-Framework/master/update.txt").read()
     request_source_date = BeautifulSoup(request_date, "html.parser")
@@ -398,21 +453,9 @@ sql_inection = args.sql
 list_dork = args.listDork
 updates = args.update
 sublist = open("sub.txt", "r")
-if level != None:
-    level = level
-else:
-    level = 20
-if country != None:
-    site = country
-else:
-    site = " "
-if listuser != None:
-    lists = open(listuser, "r")
-else:
-    lists = open("list.txt", "r")
-
+site=args.country
 if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None:
-    dorks(dork, site, int(level), text)
+    dorks(dork, site, text)
 elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None:
     spider(url, lists)
 elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None and list_dork == None and updates == None:
@@ -427,6 +470,6 @@ elif sql_inection == None and scanner == None and url == None and dork == None a
     if updates=="check" or updates == "Check":
         update()
     else:
-        print(colored("Error ! Please Ener --update check","red"))
+        print(colored("Error ! Please Enter --update check","red"))
 else:
     logo()
