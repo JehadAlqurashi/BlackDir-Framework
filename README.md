@@ -13,7 +13,8 @@ pip3 install -r requirements.txt</br>
 python3 BlackDir.py</br>
 
  
-![BlackDir](https://user-images.githubusercontent.com/46041727/78068401-07710e00-73a1-11ea-86f3-d8cba5da5719.PNG)
+
+![Capre](https://user-images.githubusercontent.com/46041727/79525630-0b24b600-806c-11ea-8110-9ef686d2e982.PNG)
 
 
 
@@ -22,4 +23,4 @@ python3 BlackDir.py</br>
 
 
 # Version:
-<b><p>1.2</p></b>
+<b><p>1.9</p></b>
