@@ -2,7 +2,6 @@ import time
 import datetime
 from urllib import request
 from urllib.parse import urlsplit, parse_qs
-from urllib import error
 import os
 try:
     from bs4 import BeautifulSoup
@@ -49,7 +48,7 @@ except:
 
 def logo():
     print("""
-\x1b[30m
+\x1b[32m
   ____  _            _    _____  _        ______                                           _    
  |  _ \| |          | |  |  __ \(_)      |  ____|                                         | |   
  | |_) | | __ _  ___| | _| |  | |_ _ __  | |__ _ __ __ _ _ __ ___   _____      _____  _ __| | __
@@ -68,10 +67,8 @@ def fast_crawl(url):
     global list_direct, url_access, url_pure, url_source
     list_direct_pure = []
     list_direct = []
-    url_pure = url.strip("https://www.")
-    url_pure = "http://" + url_pure
-    list_direct.append(url_pure)
-    url_request = request.urlopen(url_pure)
+    list_direct.append(url)
+    url_request = request.urlopen(url)
     url_source = BeautifulSoup(url_request, "html.parser")
     for link in url_source.find_all("a"):
         link_pure = link.get("href")
@@ -84,11 +81,11 @@ def fast_crawl(url):
                 if link_pure in list_direct:
                     pass
                 else:
-                    url_generate = url_pure + "/" + link_pure
+                    url_generate = url + "/" + link_pure
                     if url_generate in list_direct:
                         pass
                     else:
-                        list_direct.append(url_pure + "/" + link_pure)
+                        list_direct.append(url + "/" + link_pure)
     for sec_url in list_direct:
         try:
             url_request = request.urlopen(sec_url).read()
@@ -116,17 +113,25 @@ def fast_crawl(url):
                             if url in urls_find:
                                 pass
                             else:
-                                list_direct_pure.append(url_pure + "/" + urls_find)
+                                list_direct_pure.append(url + "/" + urls_find)
     for urls_error in list_direct_pure:
         if urls_error in list_direct:
             pass
         else:
             list_direct.append(urls_error)
     for urls_final in list_direct:
-        if urls_final == url_pure:
+        if urls_final == None:
             pass
         else:
-            print(colored("Found[+]\n" + urls_final, "green"))
+            req = requests.get(urls_final)
+            try:
+                if req.status_code == 200:
+                    print(colored("Status Code:","red"),colored(req.status_code,"green"))
+                else:
+                    print(colored("Status Code:","red"),colored(req.status_code,"green"))
+            except requests.exceptions.ConnectionError:
+                pass
+            print(colored("Url:", "red"),colored(urls_final,"green"))
     print(colored("Fast spider Done ..", "red"))
 
 def sql(url):  #Function F0r find Sql_Injection
@@ -286,21 +291,53 @@ def xss(url):  # Function FOr Find xss vulnerability
             else:
                 pass
 
+def httplive(url):
+    global live
+    live= None
+    bool(live)
+    try:
+        request_live = requests.get(url)
+        if request_live.status_code == 200:
+            print(colored("Http Live : ","green"),url)
+            live = 1
+    except requests.exceptions.ConnectionError:
+        print(colored("Http Down : ","red"),url)
+        live = 0
 
-def spider(url, lists):
-    print(colored("Please Wait We Spider all Directories . .", "red"))
-    fast_crawl(url)
-    print(colored("We Crawling By This File >>" + os.getcwd() + "/" + "list.txt", "grey"))
-    for i in lists:
-        i = i.strip()
-        Purl = url_pure + "/" + i
-        response = requests.get(Purl)
-        if response.status_code == 200:
-            print("\x1b[32mFound[+]")
-            print(response.url)
+
+def spider(url, lists,secure):
+    print(colored("Please Wait We Check if URL Live or Down . . ","green"))
+    time.sleep(3)
+    httplive(url)
+    if live == 1:
+        if secure == "list.txt":
+            print(colored("Please Wait We Spider all Directories . .", "red"))
+            time.sleep(3)
+            fast_crawl(url)
+            print(colored("We Crawling By This File >>" + os.getcwd() + "/" + "list.txt", "green"))
+            for i in lists:
+                i = i.strip()
+                Purl = url + "/" + i
+                response = requests.get(Purl)
+                if response.status_code == 200:
+                    print("\x1b[32mFound[+]")
+                    print(response.url)
+                else:
+                    pass
         else:
-            pass
-
+            fast_crawl(url)
+            print(colored("We Crawling By This File >>" +listuser, "green"))
+            for i in lists:
+                i = i.strip()
+                Purl = url + "/" + i
+                response = requests.get(Purl)
+                if response.status_code == 200:
+                    print("\x1b[32mFound[+]")
+                    print(response.url)
+                else:
+                    pass
+    else:
+        pass
 
 def dorks(dork, country, text):  # function for Get Dork
     global soup
@@ -441,7 +478,14 @@ parser.add_argument("-sql", "--sql")
 parser.add_argument("-listDork", "--listDork")
 parser.add_argument("-update", "--update")
 args = parser.parse_args()
+secure = None
 listuser = args.list
+if listuser != None:
+    listuser = args.list
+    secure = None
+elif listuser == None:
+    listuser = open("list.txt","r")
+    secure = "list.txt"
 dork = args.dork
 country = args.country
 level = args.level
@@ -457,7 +501,7 @@ site=args.country
 if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None:
     dorks(dork, site, text)
 elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None:
-    spider(url, lists)
+    spider(url, listuser,secure)
 elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None and list_dork == None and updates == None:
     sub(subdomains, sublist)
 elif scanner != None and url == None and dork == None and subdomains == None and sql_inection == None and list_dork == None and updates == None:
