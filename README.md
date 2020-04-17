@@ -18,7 +18,8 @@ python3 BlackDir.py</br>
 
 
 
-![BlackDir2](https://user-images.githubusercontent.com/46041727/78068465-1d7ece80-73a1-11ea-9e50-813c7e0793e5.PNG)
+![ip](https://user-images.githubusercontent.com/46041727/79525680-298ab180-806c-11ea-9148-aa0c3b5c9ef4.PNG)
+
 
 
 
