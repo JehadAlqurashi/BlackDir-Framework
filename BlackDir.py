@@ -54,7 +54,7 @@ def logo():
  | |_) | | __ _  ___| | _| |  | |_ _ __  | |__ _ __ __ _ _ __ ___   _____      _____  _ __| | __
  |  _ <| |/ _` |/ __| |/ / |  | | | '__| |  __| '__/ _` | '_ ` _ \ / _ \ \ /\ / / _ \| '__| |/ /
  | |_) | | (_| | (__|   <| |__| | | |    | |  | | | (_| | | | | | |  __/\ V  V / (_) | |  |   < 
- |____/|_|\__,_|\___|_|\_\_____/|_|_|    |_|  |_|  \__,_|_| |_| |_|\___| \_/\_/ \___/|_|  |_|\_\ version:1.2
+ |____/|_|\__,_|\___|_|\_\_____/|_|_|    |_|  |_|  \__,_|_| |_| |_|\___| \_/\_/ \___/|_|  |_|\_\ version:1.9
                                                                                                 
                                                                                                                                                                    
 help: python3 BlackDir.py -h
@@ -64,7 +64,7 @@ C0ded By RedVirus[@redvirus0]
 
 
 def fast_crawl(url):
-    global list_direct, url_access, url_pure, url_source
+    global list_direct, url_access, url_source
     list_direct_pure = []
     list_direct = []
     list_direct.append(url)
@@ -421,7 +421,15 @@ def sub(url, subs):  #function for gussing subdomain
         except:
             pass
 
-
+def ip_reverse(ip):
+    try:
+        url = ("https://api.hackertarget.com/reverseiplookup/?q=")
+        url_ip = url+ip
+        req = requests.get(url_ip)
+        response = req.text
+        print(colored(response,"blue"))
+    except requests.exceptions.ConnectionError:
+        print(colored("Connection Fail", "blue"))
 def update():
     global year, month, day
     print(colored("Please wait we find update ..","green"))
@@ -460,6 +468,7 @@ parser = argparse.ArgumentParser("""
 --xss               : Scan Site if vulnerable [Xss]
 --sql               : Scan Site if vulnerable [Sql]
 --listDork          : Scan list Dorks if Vulnerable [Sql]
+--RevIP             : Dump all site by ip
 --update            : Update Tool ex: --update check
 ex:
 BlackDir.py --list /root/Desktop/list.txt --url http://google.com
@@ -477,6 +486,7 @@ parser.add_argument("-text", "--text")
 parser.add_argument("-sql", "--sql")
 parser.add_argument("-listDork", "--listDork")
 parser.add_argument("-update", "--update")
+parser.add_argument("-RevIP", "--RevIP")
 args = parser.parse_args()
 secure = None
 listuser = args.list
@@ -486,6 +496,7 @@ if listuser != None:
 elif listuser == None:
     listuser = open("list.txt","r")
     secure = "list.txt"
+ip = args.RevIP
 dork = args.dork
 country = args.country
 level = args.level
@@ -498,22 +509,24 @@ list_dork = args.listDork
 updates = args.update
 sublist = open("sub.txt", "r")
 site=args.country
-if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None:
+if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None:
     dorks(dork, site, text)
-elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None:
+elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None:
     spider(url, listuser,secure)
-elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None and list_dork == None and updates == None:
+elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None:
     sub(subdomains, sublist)
-elif scanner != None and url == None and dork == None and subdomains == None and sql_inection == None and list_dork == None and updates == None:
+elif scanner != None and url == None and dork == None and subdomains == None and sql_inection == None and list_dork == None and updates == None and ip == None:
     xss(scanner)
-elif sql_inection != None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None:
+elif sql_inection != None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None:
     sql(sql_inection)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork != None and updates == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork != None and updates == None and ip == None:
     list_dorks(list_dork, int(level))
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates != None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates != None and ip == None:
     if updates=="check" or updates == "Check":
         update()
     else:
         print(colored("Error ! Please Enter --update check","red"))
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip != None:
+    ip_reverse(ip)
 else:
     logo()
