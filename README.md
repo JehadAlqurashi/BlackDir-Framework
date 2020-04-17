@@ -4,6 +4,7 @@
   <p>[3] Advanced Dorks Search </p>
   <p>[4] Scan list of Dorks </p>
  <p>[5] Scan WebSites [Xss,Sql] </p>
+ <p>[6] Reverse Ip Lookup </p>
 <h1>Installation:</h1>
 
 git clone https://github.com/RedVirus0/BlackDir-Framework.git</br>
