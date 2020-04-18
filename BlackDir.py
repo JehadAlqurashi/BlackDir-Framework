@@ -437,7 +437,11 @@ def ip_reverse(ip):
     except requests.exceptions.ConnectionError:
         print(colored("Connection Fail", "blue"))
 
-
+def ScanPorts(ip):
+    api = "https://api.hackertarget.com/nmap/?q="
+    new_api = api+ip
+    req_api = requests.get(new_api)
+    print(req_api.text)
 def update():
     os.system("cd .. && rm -rf BlackDir-Framework-New && mkdir BlackDir-Framework-New && cd BlackDir-Framework-New && git clone https://github.com/RedVirus0/BlackDir-Framework.git && echo 'New Directory >> ' && pwd")
 
@@ -454,6 +458,7 @@ parser = argparse.ArgumentParser("""
 --sql               : Scan Site if vulnerable [Sql]
 --listDork          : Scan list Dorks if Vulnerable [Sql]
 --RevIP             : Dump all site by ip
+--port              : Scan ports by ip
 --update            : Update Tool ex: --update check
 ex:
 BlackDir.py --list /root/Desktop/list.txt --url http://google.com
@@ -472,6 +477,7 @@ parser.add_argument("-sql", "--sql")
 parser.add_argument("-listDork", "--listDork")
 parser.add_argument("-update", "--update")
 parser.add_argument("-RevIP", "--RevIP")
+parser.add_argument("-port", "--port")
 args = parser.parse_args()
 secure = None
 listuser = args.list
@@ -482,6 +488,7 @@ elif listuser == None:
     listuser = open("list.txt", "r")
     secure = "list.txt"
 ip = args.RevIP
+portscan = args.port
 dork = args.dork
 country = args.country
 level = args.level
@@ -494,24 +501,27 @@ list_dork = args.listDork
 updates = args.update
 sublist = open("sub.txt", "r")
 site = args.country
-if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None:
+if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None:
     dorks(dork, site, text)
-elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None:
+elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None:
     spider(url, listuser, secure)
-elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None:
+elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None:
     sub(subdomains, sublist)
-elif scanner != None and url == None and dork == None and subdomains == None and sql_inection == None and list_dork == None and updates == None and ip == None:
+elif scanner != None and url == None and dork == None and subdomains == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None:
     xss(scanner)
-elif sql_inection != None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None:
+elif sql_inection != None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None:
     sql(sql_inection)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork != None and updates == None and ip == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork != None and updates == None and ip == None and portscan == None:
     list_dorks(list_dork, int(level))
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates != None and ip == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates != None and ip == None and portscan == None:
     if updates == "check" or updates == "Check":
         update()
     else:
         print(colored("Error ! Please Enter --update check", "red"))
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip != None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip != None and portscan == None:
     ip_reverse(ip)
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan != None:
+    ScanPorts(portscan)
+
 else:
     logo()
