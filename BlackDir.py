@@ -1,8 +1,9 @@
 import time
-import datetime
 from urllib import request
 from urllib.parse import urlsplit, parse_qs
 import os
+import subprocess
+
 try:
     from bs4 import BeautifulSoup
 except:
@@ -10,7 +11,7 @@ except:
     print(colored("\nPlease Install bs4 library command install:\npip3 install bs4", "red"))
     exit()
 
-#----------------------------------
+# ----------------------------------
 try:
     from termcolor import colored
 except:
@@ -18,16 +19,16 @@ except:
     print(colored("\nPlease Install termcolor library command install:\npip3 install termcolor", "red"))
     exit()
 
-#--------------------------------
+# --------------------------------
 
 try:
     import requests
 except:
     os.system("clear")
-    print(colored("\nPlease Install requests library command install:\npip3 install requests","red"))
+    print(colored("\nPlease Install requests library command install:\npip3 install requests", "red"))
     exit()
 
-#--------------------------------
+# --------------------------------
 
 try:
     import argparse
@@ -55,8 +56,8 @@ def logo():
  |  _ <| |/ _` |/ __| |/ / |  | | | '__| |  __| '__/ _` | '_ ` _ \ / _ \ \ /\ / / _ \| '__| |/ /
  | |_) | | (_| | (__|   <| |__| | | |    | |  | | | (_| | | | | | |  __/\ V  V / (_) | |  |   < 
  |____/|_|\__,_|\___|_|\_\_____/|_|_|    |_|  |_|  \__,_|_| |_| |_|\___| \_/\_/ \___/|_|  |_|\_\ version:1.9
-                                                                                                
-                                                                                                                                                                   
+
+
 help: python3 BlackDir.py -h
 ==================================================
 C0ded By RedVirus[@redvirus0]                                                                                           
@@ -126,15 +127,16 @@ def fast_crawl(url):
             req = requests.get(urls_final)
             try:
                 if req.status_code == 200:
-                    print(colored("Status Code:","red"),colored(req.status_code,"green"))
+                    print(colored("Status Code:", "red"), colored(req.status_code, "green"))
                 else:
-                    print(colored("Status Code:","red"),colored(req.status_code,"green"))
+                    print(colored("Status Code:", "red"), colored(req.status_code, "green"))
             except requests.exceptions.ConnectionError:
                 pass
-            print(colored("Url:", "red"),colored(urls_final,"green"))
+            print(colored("Url:", "red"), colored(urls_final, "green"))
     print(colored("Fast spider Done ..", "red"))
 
-def sql(url):  #Function F0r find Sql_Injection
+
+def sql(url):  # Function F0r find Sql_Injection
     global equal_parameter, keys, equal_par, response
     fast_crawl(url)
     for urls in list_direct:
@@ -160,6 +162,7 @@ def sql(url):  #Function F0r find Sql_Injection
                 print("Url Vulnerable:", urls)
             else:
                 pass
+
 
 def sql_dorks(url):
     global equal_parameter, response, keys, request_status
@@ -188,7 +191,7 @@ def sql_dorks(url):
                         response = requests.get(url, post_sql)
                     if "Warning" in response.text:
                         print(colored("SQL Injection", "red"), colored("Type:Union Based", "grey"))
-                        print(colored("Url Vulnerable:","green"), colored(url, "red"))
+                        print(colored("Url Vulnerable:", "green"), colored(url, "red"))
                     else:
                         print(colored("Url Not Vulnerable: ", "red"), colored(response.url, "green"))
             else:
@@ -291,22 +294,23 @@ def xss(url):  # Function FOr Find xss vulnerability
             else:
                 pass
 
+
 def httplive(url):
     global live
-    live= None
+    live = None
     bool(live)
     try:
         request_live = requests.get(url)
         if request_live.status_code == 200:
-            print(colored("Http Live : ","green"),url)
+            print(colored("Http Live : ", "green"), url)
             live = 1
     except requests.exceptions.ConnectionError:
-        print(colored("Http Down : ","red"),url)
+        print(colored("Http Down : ", "red"), url)
         live = 0
 
 
-def spider(url, lists,secure):
-    print(colored("Please Wait We Check if URL Live or Down . . ","green"))
+def spider(url, lists, secure):
+    print(colored("Please Wait We Check if URL Live or Down . . ", "green"))
     time.sleep(3)
     httplive(url)
     if live == 1:
@@ -326,7 +330,7 @@ def spider(url, lists,secure):
                     pass
         else:
             fast_crawl(url)
-            print(colored("We Crawling By This File >>" +listuser, "green"))
+            print(colored("We Crawling By This File >>" + listuser, "green"))
             for i in lists:
                 i = i.strip()
                 Purl = url + "/" + i
@@ -339,16 +343,17 @@ def spider(url, lists,secure):
     else:
         pass
 
+
 def dorks(dork, country, text):  # function for Get Dork
     global soup
     list_of_url = []
     results = []
-    user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0"
-    headers = {'user-agent':user_agent}
-    link = "https://google.com/search?q=inurl:"+dork
-    rep = requests.get(link,headers=headers)
+    user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0"
+    headers = {'user-agent': user_agent}
+    link = "https://google.com/search?q=inurl:" + dork
+    rep = requests.get(link, headers=headers)
     if rep.status_code == 200:
-        soup = BeautifulSoup(rep.content,"html.parser")
+        soup = BeautifulSoup(rep.content, "html.parser")
     for g in soup.find_all('div', class_='r'):
         anchors = g.find_all('a')
         if anchors:
@@ -360,13 +365,13 @@ def dorks(dork, country, text):  # function for Get Dork
             }
             results.append(item)
     for dic in results:
-        list_of_link=list(dic.values())
+        list_of_link = list(dic.values())
         print("\n")
-        print(colored("Title Of Link:","green"),list_of_link[0],"\n")
-        print(colored("Link:","green"),list_of_link[1],"\n")
+        print(colored("Title Of Link:", "green"), list_of_link[0], "\n")
+        print(colored("Link:", "green"), list_of_link[1], "\n")
         list_of_url.append(list_of_link[1])
-    line = input(colored("You Want Scan All URLs [Y/N]: ","grey"))
-    if line == "Y" or line== "y" or line == None:
+    line = input(colored("You Want Scan All URLs [Y/N]: ", "grey"))
+    if line == "Y" or line == "y" or line == None:
         for urls in list_of_url:
             sql_dorks(urls)
     else:
@@ -403,7 +408,7 @@ def list_dorks(dork, level):
         sql_dorks(urls)
 
 
-def sub(url, subs):  #function for gussing subdomain
+def sub(url, subs):  # function for gussing subdomain
     if "https" in url:
         url = url.strip("https://")
     elif "http" in url:
@@ -421,40 +426,20 @@ def sub(url, subs):  #function for gussing subdomain
         except:
             pass
 
+
 def ip_reverse(ip):
     try:
         url = ("https://api.hackertarget.com/reverseiplookup/?q=")
-        url_ip = url+ip
+        url_ip = url + ip
         req = requests.get(url_ip)
         response = req.text
-        print(colored(response,"blue"))
+        print(colored(response, "blue"))
     except requests.exceptions.ConnectionError:
         print(colored("Connection Fail", "blue"))
+
+
 def update():
-    global year, month, day
-    print(colored("Please wait we find update ..","green"))
-    date_source = datetime.date(2020, 4, 8)
-    request_date = request.urlopen(
-        "https://raw.githubusercontent.com/RedVirus0/BlackDir-Framework/master/update.txt").read()
-    request_source_date = BeautifulSoup(request_date, "html.parser")
-    for date in request_source_date.find_all("p"):
-        year = date.text
-    for date in request_source_date.find_all("span"):
-        month = date.text
-    for date in request_source_date.find_all("i"):
-        day = date.text
-    date_github = datetime.date(int(year), int(month), int(day))
-    if date_source < date_github:
-        request_update = request.urlopen("https://raw.githubusercontent.com/RedVirus0/BlackDir-Framework/master/BlackDir.py")
-        request_read = request_update.read()
-        text_source = request_read.decode("utf-8")
-        print(text_source)
-        os.remove("BlackDir.py")
-        file_replace = open("BlackDir.py", "w+")
-        file_replace.write(text_source)
-        print("Finish download last update ..")
-    else:
-        print(colored("Sorry .. No Update There !","red"))
+    os.system("cd .. && rm -rf BlackDir-Framework-New && mkdir BlackDir-Framework-New && cd BlackDir-Framework-New && git clone https://github.com/RedVirus0/BlackDir-Framework.git && echo 'New Directory >> ' && pwd")
 
 
 parser = argparse.ArgumentParser("""
@@ -494,7 +479,7 @@ if listuser != None:
     listuser = args.list
     secure = None
 elif listuser == None:
-    listuser = open("list.txt","r")
+    listuser = open("list.txt", "r")
     secure = "list.txt"
 ip = args.RevIP
 dork = args.dork
@@ -508,11 +493,11 @@ sql_inection = args.sql
 list_dork = args.listDork
 updates = args.update
 sublist = open("sub.txt", "r")
-site=args.country
+site = args.country
 if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None:
     dorks(dork, site, text)
 elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None:
-    spider(url, listuser,secure)
+    spider(url, listuser, secure)
 elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None:
     sub(subdomains, sublist)
 elif scanner != None and url == None and dork == None and subdomains == None and sql_inection == None and list_dork == None and updates == None and ip == None:
@@ -522,10 +507,10 @@ elif sql_inection != None and scanner == None and url == None and dork == None a
 elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork != None and updates == None and ip == None:
     list_dorks(list_dork, int(level))
 elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates != None and ip == None:
-    if updates=="check" or updates == "Check":
+    if updates == "check" or updates == "Check":
         update()
     else:
-        print(colored("Error ! Please Enter --update check","red"))
+        print(colored("Error ! Please Enter --update check", "red"))
 elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip != None:
     ip_reverse(ip)
 else:
