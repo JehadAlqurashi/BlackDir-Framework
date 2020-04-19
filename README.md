@@ -7,12 +7,12 @@
  <p>[6] Reverse Ip Lookup </p>
  <p>[7] Port Scan </p>
 <h1>Installation:</h1>
-
+'''
 git clone https://github.com/RedVirus0/BlackDir-Framework.git</br>
 cd BlackDir</br>
 pip3 install -r requirements.txt</br>
 python3 BlackDir.py</br>
-
+'''
  
 
 ![Capre](https://user-images.githubusercontent.com/46041727/79525630-0b24b600-806c-11ea-8110-9ef686d2e982.PNG)
