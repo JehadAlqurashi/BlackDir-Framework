@@ -8,10 +8,10 @@
  <p>[7] Port Scan </p>
 <h1>Installation:</h1>
 '''
-git clone https://github.com/RedVirus0/BlackDir-Framework.git</br>
-cd BlackDir</br>
-pip3 install -r requirements.txt</br>
-python3 BlackDir.py</br>
+git clone https://github.com/RedVirus0/BlackDir-Framework.git
+cd BlackDir
+pip3 install -r requirements.txt
+python3 BlackDir.py
 '''
  
 
