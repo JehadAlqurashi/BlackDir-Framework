@@ -2,7 +2,6 @@ import time
 from urllib import request
 from urllib.parse import urlsplit, parse_qs
 import os
-import subprocess
 
 try:
     from bs4 import BeautifulSoup
@@ -119,15 +118,25 @@ def fast_crawl(url):
         if urls_error in list_direct:
             pass
         else:
-            list_direct.append(urls_error)
+            try:
+                request_url_error = requests.get(urls_error)
+                if request_url_error.status_code == 200:
+                    print(colored("Status Code:", "red"), colored(req.status_code, "green"))
+                    list_direct.append(urls_final)
+                else:
+                    print(colored("Status Code:", "red"), colored(req.status_code, "green"))
+                    list_direct.append(urls_error)
+            except requests.exceptions.ConnectionError:
+                pass
     for urls_final in list_direct:
         if urls_final == None:
             pass
         else:
-            req = requests.get(urls_final)
             try:
+                req = requests.get(urls_final)
                 if req.status_code == 200:
                     print(colored("Status Code:", "red"), colored(req.status_code, "green"))
+                    list_direct.append(urls_final)
                 else:
                     print(colored("Status Code:", "red"), colored(req.status_code, "green"))
             except requests.exceptions.ConnectionError:
@@ -344,13 +353,18 @@ def spider(url, lists, secure):
         pass
 
 
-def dorks(dork, country, text):  # function for Get Dork
-    global soup
+def dorks(dork, country,text):  # function for Get Dork
+    if  country != None and text == None:
+        docker = "inurl:"+dork+" site:"+country
+    elif country == None and text != None:
+        docker = "inurl:"+dork+" intext:"+country
+    else:
+        docker ="inurl:"+dork
     list_of_url = []
     results = []
     user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0"
     headers = {'user-agent': user_agent}
-    link = "https://google.com/search?q=inurl:" + dork
+    link = "https://google.com/search?q="+docker
     rep = requests.get(link, headers=headers)
     if rep.status_code == 200:
         soup = BeautifulSoup(rep.content, "html.parser")
@@ -370,7 +384,7 @@ def dorks(dork, country, text):  # function for Get Dork
         print(colored("Title Of Link:", "green"), list_of_link[0], "\n")
         print(colored("Link:", "green"), list_of_link[1], "\n")
         list_of_url.append(list_of_link[1])
-    line = input(colored("You Want Scan All URLs [Y/N]: ", "grey"))
+    line = input(colored("You Want Scan All URLs [Y/N]: ", "green"))
     if line == "Y" or line == "y" or line == None:
         for urls in list_of_url:
             sql_dorks(urls)
