@@ -19,7 +19,7 @@ python3 BlackDir.py
 
 
 
-![port](https://user-images.githubusercontent.com/46041727/79672176-5f4ca900-81d8-11ea-946e-6e8ace99b6d5.PNG)
+![help](https://user-images.githubusercontent.com/46041727/80273393-50835c00-86da-11ea-95e1-43b5bf43db5d.PNG)
 
 
 
