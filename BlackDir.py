@@ -57,7 +57,8 @@ def logo():
  |____/|_|\__,_|\___|_|\_\_____/|_|_|    |_|  |_|  \__,_|_| |_| |_|\___| \_/\_/ \___/|_|  |_|\_\ version:1.9
 
  -----------------------------------------------------------------------------------------------------------
-    Programmer this tool not irresponsible about any damage Or leak induced by the user
+    The Programmer of this tool is not irresponsible about any damage Or leak induced by the user
+    مبرمج هذي الاداة غير مسؤول عن اي ضرر يصيب الموقع او تسريب بسبب المستخدم         
  -----------------------------------------------------------------------------------------------------------
  
 help: python3 BlackDir.py -h
