@@ -56,7 +56,10 @@ def logo():
  | |_) | | (_| | (__|   <| |__| | | |    | |  | | | (_| | | | | | |  __/\ V  V / (_) | |  |   < 
  |____/|_|\__,_|\___|_|\_\_____/|_|_|    |_|  |_|  \__,_|_| |_| |_|\___| \_/\_/ \___/|_|  |_|\_\ version:1.9
 
-
+ -----------------------------------------------------------------------------------------------------------
+    Programmer this tool not irresponsible about any damage Or leak induced by the user
+ -----------------------------------------------------------------------------------------------------------
+ 
 help: python3 BlackDir.py -h
 ==================================================
 C0ded By RedVirus[@redvirus0]                                                                                           
@@ -65,114 +68,143 @@ C0ded By RedVirus[@redvirus0]
 
 def fast_crawl(url):
     global list_direct, url_access, url_source
-    list_direct_pure = []
     list_direct = []
+    url_strip = url.strip("https://www.")
+    headers = {"user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0"}
     list_direct.append(url)
-    url_request = request.urlopen(url)
-    url_source = BeautifulSoup(url_request, "html.parser")
+    url_request = requests.get(url,headers=headers)
+    url_source = BeautifulSoup(url_request.content, "html.parser")
     for link in url_source.find_all("a"):
         link_pure = link.get("href")
-        if "http" in link_pure or "www." in link_pure or "@" in link_pure or "#" in link_pure or " " in link_pure:
-            pass
-        else:
-            if link_pure == "":
-                pass
-            else:
-                if link_pure in list_direct:
-                    pass
-                else:
-                    url_generate = url + "/" + link_pure
-                    if url_generate in list_direct:
-                        pass
-                    else:
-                        list_direct.append(url + "/" + link_pure)
-    for sec_url in list_direct:
         try:
-            url_request = request.urlopen(sec_url).read()
-            url_source = BeautifulSoup(url_request, "html.parser")
-        except error.URLError:
-            pass
-        for urls in url_source.findAll("a"):
-            urls_find = urls.get("href")
-            if urls_find == None:
-                urls_find = "#"
-            if "#" in urls_find or " " in urls_find or "http" in urls_find or "https" in urls_find or "www" in urls_find or "@" in urls_find or urls_find == "#":
+            if "#" in link_pure or "../" in link_pure or "facebook.com" in link_pure or "@" in link_pure:
                 pass
             else:
-                urls_avi = url + "/" + urls_find
-                if urls_avi in list_direct:
+                if "http" not in link_pure and "https" not in link_pure and url_strip not in link_pure:
+                    try:
+                        first_req = requests.get(url+link_pure)
+                        if first_req.status_code == 200:
+                            print(colored("================================================================","green"))
+                            print(colored("Url:","green"),url+link_pure)
+                            print(colored("Request:","green"),first_req.status_code)
+                            print(colored("================================================================","green"))
+                            list_direct.append(url+link_pure)
+                        else:
+                            pass
+                    except requests.exceptions.ConnectionError:
+                        pass
+                else:
+                    if "http" in link_pure or "https" in link_pure and url_strip in link_pure:
+                        try:
+                            sec_req = requests.get(link_pure)
+                            if sec_req.status_code == 200:
+                                if sec_req.url not in list_direct:
+                                    print(colored("================================================================","green"))
+                                    print(colored("Url:", "green"),link_pure)
+                                    print(colored("Request:", "green"), sec_req.status_code)
+                                    print(colored("================================================================","green"))
+                                    list_direct.append(link_pure)
+                            else:
+                                pass
+                        except requests.exceptions.ConnectionError:
+                            pass
+                    elif "http" not in link_pure or "https" not in link_pure and url_strip in link_pure:
+                        try:
+                            third_req = requests.get("http://"+link_pure)
+                            if third_req.status_code == 200:
+                                if third_req.url not in list_direct:
+                                    print(colored("================================================================","green"))
+                                    print(colored("Url:", "green"), third_req.url)
+                                    print(colored("Request:", "green"), third_req.status_code)
+                                    print(colored("================================================================","green"))
+                                    list_direct.append("http://"+link_pure)
+                            else:
+                                pass
+                        except requests.exceptions.ConnectionError:
+                            pass
+                    else:
+                        try:
+                            fourth_req = requests.get(link_pure)
+                            if fourth_req.status_code == 200:
+                                if fourth_req.url not in list_direct:
+                                    print(colored("================================================================","green"))
+                                    print(colored("Url:", "green"), fourth_req.url)
+                                    print(colored("Request:", "green"), fourth_req.status_code)
+                                    print(colored("================================================================","green"))
+                                    list_direct.append(fourth_req.url)
+                            else:
+                                pass
+                        except requests.exceptions.ConnectionError:
+                            pass
+        except:
+            pass
+    for url_form_list in list_direct:
+        sec_url_request = requests.get(url_form_list)
+        soup = BeautifulSoup(sec_url_request.content,"html.parser")
+        for sec_link in soup.find_all("a"):
+            sec_link = sec_link.get("href")
+            try:
+                if "#" in sec_link or "./" in sec_link:
                     pass
                 else:
-                    if urls_find == None or urls_find == " ":
-                        urls_find.strip()
+                    if url_strip not in sec_link:
                         pass
                     else:
-                        if urls_find == "":
-                            pass
-                        else:
-                            if url in urls_find:
+                        if "http" not in sec_link or "https" not in sec_link and url_strip in sec_link:
+                            try:
+                                five_req = requests.get("http://"+sec_link)
+                                if five_req.status_code == 200:
+                                    if five_req.url not in list_direct:
+                                        print(colored("================================================================","green"))
+                                        print(colored("Url:", "green"), five_req.url)
+                                        print(colored("Request:", "green"), five_req.status_code)
+                                        print(colored("================================================================","green"))
+                                        list_direct.append(five_req.url)
+                                else:
+                                    pass
+                            except:
                                 pass
-                            else:
-                                list_direct_pure.append(url + "/" + urls_find)
-    for urls_error in list_direct_pure:
-        if urls_error in list_direct:
-            pass
+                        else:
+                            try:
+                                six_req = requests.get(sec_link)
+                                if six_req.status_code == 200:
+                                    if six_req.url not in list_direct:
+                                        print(colored("================================================================","green"))
+                                        print(colored("Url:", "green"), six_req.url)
+                                        print(colored("Request:", "green"), six_req.status_code)
+                                        print(colored("================================================================","green"))
+                                        list_direct.append(six_req.url)
+                                else:
+                                    pass
+                            except:
+                                pass
+            except:
+                pass
+def sql(url): #Function F0r find Sql_Injection
+    try:
+        parametrs = []
+        after_eq = []
+        get = {}
+        query = urlsplit(url).query
+        dictonary = parse_qs(query)
+        key = list(dictonary.keys())
+        value = list(dictonary.values())
+        for par in key:
+            parametrs.append(par)
+        for equal in value:
+            for number in equal:
+                after_eq.append(number+"'")
+        for pars in parametrs:
+            for eq in after_eq:
+                get={pars:eq}
+        req = requests.get(url,params=get)
+        if "Warning" in req.text or "Database error" in req.text or "MySQL error" in req.text or "SQL syntax" in req.text:
+            print(colored("SQL Injection", "red"), colored("Type:Union Based", "grey"))
+            print(colored("Url Vulnerable:", "green"), colored(req.url, "red"))
         else:
-            try:
-                request_url_error = requests.get(urls_error)
-                if request_url_error.status_code == 200:
-                    print(colored("Status Code:", "red"), colored(req.status_code, "green"))
-                    list_direct.append(urls_final)
-                else:
-                    print(colored("Status Code:", "red"), colored(req.status_code, "green"))
-                    list_direct.append(urls_error)
-            except requests.exceptions.ConnectionError:
-                pass
-    for urls_final in list_direct:
-        if urls_final == None:
-            pass
-        else:
-            try:
-                req = requests.get(urls_final)
-                if req.status_code == 200:
-                    print(colored("Status Code:", "red"), colored(req.status_code, "green"))
-                    list_direct.append(urls_final)
-                else:
-                    print(colored("Status Code:", "red"), colored(req.status_code, "green"))
-            except requests.exceptions.ConnectionError:
-                pass
-            print(colored("Url:", "red"), colored(urls_final, "green"))
-    print(colored("Fast spider Done ..", "red"))
-
-
-def sql(url):  # Function F0r find Sql_Injection
-    global equal_parameter, keys, equal_par, response
-    fast_crawl(url)
-    for urls in list_direct:
-        query = urlsplit(urls).query
-        parameter = parse_qs(query)
-        url_request = request.urlopen(urls).read().decode(encoding="iso-8859-1")
-        url_source = BeautifulSoup(url_request, "html.parser")
-        values = list(parameter.values())
-        for index, item in enumerate(values):
-            equal_par = values[index]
-            for i in equal_par:
-                equal_parameter = str(i + "'")
-                keys = list(parameter.keys())
-            for index, item in enumerate(keys):
-                parmeter_name = keys[index]
-                parmeter_name = str(parmeter_name)
-                post_sql = {}
-                post_sql[parmeter_name] = equal_parameter
-                response = requests.get(urls, post_sql)
-            if "Warning" in response.text:
-                print("Information: ")
-                print(colored("SQL Injection", "red"), colored("Type:Union Based", "grey"))
-                print("Url Vulnerable:", urls)
-            else:
-                pass
-
-
+            print(req.content)
+    except:
+        pass
 def sql_dorks(url):
     global equal_parameter, response, keys, request_status
     try:
@@ -392,36 +424,41 @@ def dorks(dork, country,text):  # function for Get Dork
         pass
 
 
-def list_dorks(dork, level):
-    global list_sql, dorks, search
-    list_dork = []
-    list_sql = []
-    file = open(dork, "r+")
-    for dorks in file:
-        list_dork.append(dorks)
-    file.close()
-    for userAgent in googlesearch.get_random_user_agent():
-        for URL in list_dork:
-            print(colored("-------------------------------------------", "red"))
-            print(colored("Dork:" + URL, "red"))
-            print(colored("level: {}", "red").format(level))
-            print(colored("-------------------------------------------", "red"))
-            try:
-                searching = googlesearch.search(URL, stop=level, user_agent=userAgent, num=15)
-                time.sleep(40)
-                for search in searching:
-                    print(search)
-                Req = requests.get(search)
-                if Req.status_code == 200:
-                    list_sql.append(search)
-                else:
-                    pass
-            except requests.exceptions.ConnectionError:
-                pass
-    for urls in list_sql:
-        sql_dorks(urls)
-
-
+def list_dorks(file):
+    handle =open(file,"r")
+    user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0"
+    headers = {'user-agent': user_agent}
+    result=[]
+    url_hand = []
+    for dork in handle:
+        print(colored("------------------------","red"))
+        print(colored("Dork:", "red"), colored(dork,"green"))
+        print(colored("------------------------","red"))
+        time.sleep(2)
+        link = "https://google.com/search?q="+dork
+        rep = requests.get(link,headers=headers)
+        if rep.status_code == 200:
+            soup = BeautifulSoup(rep.content,"html.parser")
+        for g in soup.find_all('div', class_='r'):
+            anchors = g.find_all('a')
+            if anchors:
+                link = anchors[0]['href']
+                title = g.find('h3').text
+                item = {
+                    "title": title,
+                    "link": link
+                }
+                result.append(item)
+                for dict in result:
+                    list_link = list(dict.values())
+                    print("\n")
+                    print(colored("Title Of Link:", "green"), list_link[0], "\n")
+                    print(colored("Link:", "green"), list_link[1], "\n")
+                    url_hand.append(list_link[1])
+    user = input(colored("You Want Scan All URLs [Y/N]: ", "green"))
+    if user == "Y" or user == "y" or user == None:
+        for urls in url_hand:
+            sql_dorks(urls)
 def sub(url, subs):  # function for gussing subdomain
     if "https" in url:
         url = url.strip("https://")
@@ -451,7 +488,7 @@ def ip_reverse(ip):
     except requests.exceptions.ConnectionError:
         print(colored("Connection Fail", "blue"))
 
-def ScanPorts(ip):
+def scanports(ip):
     api = "https://api.hackertarget.com/nmap/?q="
     new_api = api+ip
     req_api = requests.get(new_api)
@@ -464,7 +501,6 @@ parser = argparse.ArgumentParser("""
 --spider            : Url to find Directory
 --list              : If you have list
 --dork              : Dump all sites by dork
---level             : If you chose level for Dork [Default=20]
 --country           : find Dork By Country
 --text              : Dump site text if in site
 --subdomain         : find SubDomain of site
@@ -483,7 +519,6 @@ parser.add_argument("-spider", "--spider")
 parser.add_argument("-list", "--list")
 parser.add_argument("-dork", "--dork")
 parser.add_argument("-country", "--country")
-parser.add_argument("-level", "--level")
 parser.add_argument("-subdomain", "--subdomain")
 parser.add_argument("-xss", "--xss")
 parser.add_argument("-text", "--text")
@@ -505,7 +540,6 @@ ip = args.RevIP
 portscan = args.port
 dork = args.dork
 country = args.country
-level = args.level
 url = args.spider
 subdomains = args.subdomain
 scanner = args.xss
@@ -526,7 +560,7 @@ elif scanner != None and url == None and dork == None and subdomains == None and
 elif sql_inection != None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None:
     sql(sql_inection)
 elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork != None and updates == None and ip == None and portscan == None:
-    list_dorks(list_dork, int(level))
+    list_dorks(list_dork)
 elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates != None and ip == None and portscan == None:
     if updates == "check" or updates == "Check":
         update()
@@ -535,7 +569,7 @@ elif sql_inection == None and scanner == None and url == None and dork == None a
 elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip != None and portscan == None:
     ip_reverse(ip)
 elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan != None:
-    ScanPorts(portscan)
+    scanports(portscan)
 
 else:
     logo()
