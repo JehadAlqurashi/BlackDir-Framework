@@ -15,7 +15,7 @@ python3 BlackDir.py
 </pre>
  
 
-![Capre](https://user-images.githubusercontent.com/46041727/79525630-0b24b600-806c-11ea-8110-9ef686d2e982.PNG)
+![banner](https://user-images.githubusercontent.com/46041727/80273365-1c0fa000-86da-11ea-9f34-14a1d699ab25.PNG)
 
 
 
