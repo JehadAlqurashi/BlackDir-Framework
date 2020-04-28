@@ -58,7 +58,6 @@ def logo():
 
  -----------------------------------------------------------------------------------------------------------
     The Programmer of this tool is not irresponsible about any damage Or leak induced by the user
-    مبرمج هذي الاداة غير مسؤول عن اي ضرر يصيب الموقع او تسريب بسبب المستخدم         
  -----------------------------------------------------------------------------------------------------------
  
 help: python3 BlackDir.py -h
@@ -387,12 +386,14 @@ def spider(url, lists, secure):
 
 
 def dorks(dork, country,text):  # function for Get Dork
+    print("gg")
     if  country != None and text == None:
         docker = "inurl:"+dork+" site:"+country
     elif country == None and text != None:
         docker = "inurl:"+dork+" intext:"+country
     else:
         docker ="inurl:"+dork
+    print(docker)
     list_of_url = []
     results = []
     user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0"
@@ -403,6 +404,7 @@ def dorks(dork, country,text):  # function for Get Dork
         soup = BeautifulSoup(rep.content, "html.parser")
     for g in soup.find_all('div', class_='r'):
         anchors = g.find_all('a')
+        print(anchors)
         if anchors:
             link = anchors[0]['href']
             title = g.find('h3').text
