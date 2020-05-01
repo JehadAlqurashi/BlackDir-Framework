@@ -193,53 +193,27 @@ def sql(url): #Function F0r find Sql_Injection
             parametrs.append(par)
         for equal in value:
             for number in equal:
+
                 after_eq.append(number+"'")
         for pars in parametrs:
             for eq in after_eq:
                 get={pars:eq}
-        req = requests.get(url,params=get)
-        if "Warning" in req.text or "Database error" in req.text or "MySQL error" in req.text or "SQL syntax" in req.text:
-            print(colored("SQL Injection", "red"), colored("Type:Union Based", "grey"))
-            print(colored("Url Vulnerable:", "green"), colored(req.url, "red"))
-        else:
-            print(req.content)
-    except:
-        pass
-def sql_dorks(url):
-    global equal_parameter, response, keys, request_status
-    try:
-        time.sleep(1.0)
-        try:
-            request_status = requests.get(url)
-            if request_status.status_code == 200:
-                print(colored("Request Status:", "red"), colored(request_status.status_code, "green"))
-                print("Url:", colored(url, "green"))
-                query = urlsplit(url).query
-                parameter = parse_qs(query)
-                url_request = request.urlopen(url).read().decode(encoding="iso-8859-1")
-                url_source = BeautifulSoup(url_request, "html.parser")
-                values = list(parameter.values())
-                for index, item in enumerate(values):
-                    equal_par = values[index]
-                    for i in equal_par:
-                        equal_parameter = str(i + "'")
-                        keys = list(parameter.keys())
-                    for index, item in enumerate(keys):
-                        parmeter_name = keys[index]
-                        parmeter_name = str(parmeter_name)
-                        post_sql = {}
-                        post_sql[parmeter_name] = equal_parameter
-                        response = requests.get(url, post_sql)
-                    if "Warning" in response.text:
-                        print(colored("SQL Injection", "red"), colored("Type:Union Based", "grey"))
-                        print(colored("Url Vulnerable:", "green"), colored(url, "red"))
-                    else:
-                        print(colored("Url Not Vulnerable: ", "red"), colored(response.url, "green"))
+        get_list= list(get)
+        for item in get_list:
+            item = item.strip()
+            if item != None:
+                req = requests.get(url,params=get)
+                if "Warning" in req.text or "Database error" in req.text or "MySQL error" in req.text or "SQL syntax" in req.text:
+                    print(colored("================================================================","green"))
+                    print(colored("SQL Injection", "red"), colored("Type:Union Based", "grey"))
+                    print(colored("Url Vulnerable:", "green"), colored(req.url, "red"))
+                    print(colored("================================================================", "green"))
+                else:
+                    print(colored("================================================================", "green"))
+                    print(colored("Url Not Vulnerable:","green"),colored(req.url,"red"))
+                    print(colored("================================================================", "green"))
             else:
-                print(colored("Request Status:" + request_status.status_code, "red"))
-                print("Url:", request_status.url)
-        except requests.exceptions.ConnectionError:
-            pass
+                pass
     except:
         pass
 
@@ -386,14 +360,13 @@ def spider(url, lists, secure):
 
 
 def dorks(dork, country,text):  # function for Get Dork
-    print("gg")
+    print(colored("Please Wait .. ","red"))
     if  country != None and text == None:
         docker = "inurl:"+dork+" site:"+country
     elif country == None and text != None:
         docker = "inurl:"+dork+" intext:"+country
     else:
         docker ="inurl:"+dork
-    print(docker)
     list_of_url = []
     results = []
     user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0"
@@ -404,7 +377,6 @@ def dorks(dork, country,text):  # function for Get Dork
         soup = BeautifulSoup(rep.content, "html.parser")
     for g in soup.find_all('div', class_='r'):
         anchors = g.find_all('a')
-        print(anchors)
         if anchors:
             link = anchors[0]['href']
             title = g.find('h3').text
@@ -422,7 +394,7 @@ def dorks(dork, country,text):  # function for Get Dork
     line = input(colored("You Want Scan All URLs [Y/N]: ", "green"))
     if line == "Y" or line == "y" or line == None:
         for urls in list_of_url:
-            sql_dorks(urls)
+            sql(urls)
     else:
         pass
 
@@ -461,7 +433,7 @@ def list_dorks(file):
     user = input(colored("You Want Scan All URLs [Y/N]: ", "green"))
     if user == "Y" or user == "y" or user == None:
         for urls in url_hand:
-            sql_dorks(urls)
+            sql(urls)
 def sub(url, subs):  # function for gussing subdomain
     if "https" in url:
         url = url.strip("https://")
