@@ -1,7 +1,0 @@
-<html>
-<body>
-<p class="year">2020</p>
-<span class="month">04</span>
-<i class="day">8</i>
-</body>
-</html>
