@@ -193,7 +193,6 @@ def sql(url): #Function F0r find Sql_Injection
             parametrs.append(par)
         for equal in value:
             for number in equal:
-
                 after_eq.append(number+"'")
         for pars in parametrs:
             for eq in after_eq:
@@ -365,6 +364,8 @@ def dorks(dork, country,text):  # function for Get Dork
         docker = "inurl:"+dork+" site:"+country
     elif country == None and text != None:
         docker = "inurl:"+dork+" intext:"+country
+    elif country != None and text != None:
+        docker = "inurl:"+dork+" site:"+country+" intext:"+text
     else:
         docker ="inurl:"+dork
     list_of_url = []
@@ -406,9 +407,9 @@ def list_dorks(file):
     result=[]
     url_hand = []
     for dork in handle:
-        print(colored("------------------------","red"))
+        print(colored("------------------------","green"))
         print(colored("Dork:", "red"), colored(dork,"green"))
-        print(colored("------------------------","red"))
+        print(colored("------------------------","green"))
         time.sleep(2)
         link = "https://google.com/search?q="+dork
         rep = requests.get(link,headers=headers)
