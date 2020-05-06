@@ -2,7 +2,6 @@ import time
 from urllib import request
 from urllib.parse import urlsplit, parse_qs
 import os
-
 try:
     from bs4 import BeautifulSoup
 except:
@@ -48,7 +47,7 @@ except:
 
 def logo():
     print("""
-\x1b[32m
+\x1b[34m
   ____  _            _    _____  _        ______                                           _    
  |  _ \| |          | |  |  __ \(_)      |  ____|                                         | |   
  | |_) | | __ _  ___| | _| |  | |_ _ __  | |__ _ __ __ _ _ __ ___   _____      _____  _ __| | __
@@ -61,8 +60,9 @@ def logo():
  -----------------------------------------------------------------------------------------------------------
  
 help: python3 BlackDir.py -h
-==================================================
-C0ded By RedVirus[@redvirus0]                                                                                           
+=================================
+C0ded By RedVirus[@redvirus0]
+                                                                                                                
 """)
 
 
@@ -363,7 +363,7 @@ def dorks(dork, country,text):  # function for Get Dork
     if  country != None and text == None:
         docker = "inurl:"+dork+" site:"+country
     elif country == None and text != None:
-        docker = "inurl:"+dork+" intext:"+country
+        docker = "inurl:"+dork+" intext:"+text
     elif country != None and text != None:
         docker = "inurl:"+dork+" site:"+country+" intext:"+text
     else:
@@ -465,10 +465,13 @@ def ip_reverse(ip):
         print(colored("Connection Fail", "blue"))
 
 def scanports(ip):
-    api = "https://api.hackertarget.com/nmap/?q="
-    new_api = api+ip
-    req_api = requests.get(new_api)
-    print(req_api.text)
+    try:
+        api = "https://api.hackertarget.com/nmap/?q="
+        new_api = api+ip
+        req_api = requests.get(new_api)
+        print(req_api.text)
+    except:
+        pass
 def update():
     os.system("cd .. && rm -rf BlackDir-Framework-New && mkdir BlackDir-Framework-New && cd BlackDir-Framework-New && git clone https://github.com/RedVirus0/BlackDir-Framework.git && echo 'New Directory >> ' && pwd")
 
@@ -487,9 +490,11 @@ parser = argparse.ArgumentParser("""
 --port              : Scan ports by ip
 --update            : Update Tool ex: --update check
 ex:
-BlackDir.py --list /root/Desktop/list.txt --url http://google.com
-BlackDir.py --dork inurl:admin/login.php --country site:uk --level 100
+BlackDir.py --spider http://google.com
+BlackDir.py --dork inurl:admin/login.php --country sa --text product
 BlackDir.py --subdomain google.com
+BlackDir.py --RevIP [ip address of server]
+BlackDir.py --port [ip address of server]
 """)
 parser.add_argument("-spider", "--spider")
 parser.add_argument("-list", "--list")
