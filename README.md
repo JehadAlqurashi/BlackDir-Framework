@@ -25,6 +25,9 @@ python3 BlackDir.py
 ![xss_POST](https://user-images.githubusercontent.com/46041727/81505255-95240f80-92f6-11ea-900d-54e4be5c6bf9.PNG)
 
 
+![XSS_GET](https://user-images.githubusercontent.com/46041727/81505271-b127b100-92f6-11ea-8072-de29941b821f.PNG)
+
+
 
 # Version:
 <b><p>2.0</p></b>
