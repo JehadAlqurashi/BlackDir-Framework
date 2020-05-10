@@ -1,6 +1,8 @@
 import time
 from urllib import request
-from urllib.parse import urlsplit, parse_qs
+from urllib.parse import urlsplit
+import urllib.parse as urlparse
+from urllib.parse import parse_qs
 import os
 try:
     from bs4 import BeautifulSoup
@@ -53,7 +55,7 @@ def logo():
  | |_) | | __ _  ___| | _| |  | |_ _ __  | |__ _ __ __ _ _ __ ___   _____      _____  _ __| | __
  |  _ <| |/ _` |/ __| |/ / |  | | | '__| |  __| '__/ _` | '_ ` _ \ / _ \ \ /\ / / _ \| '__| |/ /
  | |_) | | (_| | (__|   <| |__| | | |    | |  | | | (_| | | | | | |  __/\ V  V / (_) | |  |   < 
- |____/|_|\__,_|\___|_|\_\_____/|_|_|    |_|  |_|  \__,_|_| |_| |_|\___| \_/\_/ \___/|_|  |_|\_\ version:1.9
+ |____/|_|\__,_|\___|_|\_\_____/|_|_|    |_|  |_|  \__,_|_| |_| |_|\___| \_/\_/ \___/|_|  |_|\_\ version:2.0
 
  -----------------------------------------------------------------------------------------------------------
     The Programmer of this tool is not irresponsible about any damage Or leak induced by the user
@@ -182,6 +184,7 @@ def fast_crawl(url):
                 pass
 def sql(url): #Function F0r find Sql_Injection
     try:
+        print(url)
         parametrs = []
         after_eq = []
         get = {}
@@ -218,97 +221,54 @@ def sql(url): #Function F0r find Sql_Injection
 
 
 def xss(url):  # Function FOr Find xss vulnerability
-    fast_crawl(url)
-    global payload
-    print(colored("Please Wait We Scanning . .", "red"))
-    time.sleep(2)
-    for url_direct in list_direct:
-        print(colored("We Scanning This Url: ", "grey"), colored(url_direct, "green"))
-        time.sleep(2)
-        payloads = open("xss_payloads.txt", "r")
-        query = urlsplit(url).query
-        params = parse_qs(query)
-        kyes = list(params.keys())
-        single_cotation = "'"
-        slash = "//"
-        double_cotation = '"'
-        symbol = ">"
-        post_data_get = {}
-        post_data_post = {}
-        for payload in payloads:
+    #GET Method
+    try:
+        GET = {}
+        file = open("xss_payloads.txt","r")
+        parsed = urlparse.urlparse(url)
+        params = urlparse.parse_qsl(parsed.query)
+        for payload in file:
             payload = payload.strip()
-            for index, item in enumerate(kyes):
-                if payload == "; alert(1);":
-                    payload = single_cotation + payload
-                    post_data_get[kyes[index]] = payload
-                    response = requests.get(url_direct, params=post_data_get)
-                    if payload in response.text:
-                        print(colored("[!] Is Vulnerable [xss] Payload >> {}", "green").format(payload))
-                        print("Url Vulnerable", response.url)
-                        print(colored("Method:", "red") + colored("GET", "grey"))
-                        print("--------------------------------------------------------")
-                    else:
-                        print(colored("This Payload Not in Source: Payload >> {}", "red").format(payload))
-                        print(colored("[!] Method:", "red") + colored("GET", "grey"))
-                        print("--------------------------------------------------------")
-                elif payload == ")alert(1);":
-                    payload = single_cotation + payload + slash
-                    post_data_get[kyes[index]] = payload
-                    response = requests.get(url_direct, params=post_data_get)
-                    if payload in response.text:
-                        print(colored("[!] Is Vulnerable [xss] Payload >> {}", "green").format(payload))
-                        print("Url Vulnerable", response.url)
-                        print(colored("Method:", "red") + colored("GET", "grey"))
-                        print("--------------------------------------------------------")
-                    else:
-                        pass
-                elif payload == '<IMG SRC=”javascript:alert(123);':
-                    payload = payload + double_cotation + symbol
-                    post_data_get[kyes[index]] = payload
-                    response = requests.get(url_direct, params=post_data_get)
-                    if payload in response.text:
-                        print(colored("[!] Is Vulnerable [xss] Payload >> {}", "green").format(payload))
-                        print("Url Vulnerable", response.url)
-                        print(colored("Method:", "red") + colored("GET", "grey"))
-                        print("--------------------------------------------------------")
-                    else:
-                        pass
-                else:
-                    post_data_get[kyes[index]] = payload
-                    response = requests.get(url_direct, params=post_data_get)
-                    if payload in response.text:
-                        print(colored("[!] Is Vulnerable [xss] Payload >> {}", "green").format(payload))
-                        print("Url Vulnerable", response.url)
-                        print(colored("Method:", "red") + colored("GET", "grey"))
-                        print("--------------------------------------------------------")
-                    else:
-                        pass
-            url_content = request.urlopen(url_direct).read()
-            inputs = BeautifulSoup(url_content, "html.parser")
-            for inputs_form in inputs.find_all("input"):
-                if inputs_form in inputs.find_all("input"):
-                    if inputs_form.get('type') == "submit":
-                        input_submit = inputs_form.get('name')
-                        post_data_post[input_submit] = inputs_form.get("value")
-                    if inputs_form.get('type') == 'text':
-                        input_name = inputs_form.get('name')
-                        post_data_post[input_name] = payload
-            response = requests.post(url, post_data_post)  # POST
-            if payload in response.text:
-                print(colored("Information:", "grey"))
-                print(colored("[!] Url Vulnerable {}", "green").format(url))
-                print("--------------------------------------------------------")
-                print(colored("[!] Is Vulnerable [xss] Payload >> {}", "green").format(payload))
-                print("--------------------------------------------------------")
-                print(colored("[!] Method:", "red") + colored("POST", "grey"))
-                print("--------------------------------------------------------")
-                print(colored("Source:", "green"))
-                print(response.text)
-                print("--------------------------------------------------------")
-            else:
-                pass
-
-
+            for par,equeal in params:
+                GET = {par:payload}
+                check_req = requests.get(url,params=GET)
+                if payload in check_req.text:
+                    print(colored("=========================================================","green"))
+                    print(colored("Url:","green"),colored(url,"blue"))
+                    print(colored("Method:","green"),colored("GET","red"))
+                    print(colored("Url Vulnerable","red"),check_req.url)
+                    print(colored("Par:","red"),par)
+                    print(colored("Payload:","red"),payload)
+                    print(colored("=========================================================","green"))
+        file.close()
+    except:
+        pass
+    #Post Method
+    try:
+        POST = {}
+        New_open = open("xss_payloads.txt")
+        request_form = request.urlopen(url).read()
+        source = BeautifulSoup(request_form,"html.parser")
+        for payloads in New_open:
+            for form in source.findAll("input"):
+                if form.get('type') == "submit":
+                    input_submit = form.get('name')
+                    POST[input_submit] = payloads
+                if form.get('type') == 'text':
+                    input_name = form.get('name')
+                    POST[input_name] = payloads
+            sec_check_req = requests.post(url,POST)
+            if payloads in sec_check_req.text:
+                print(colored("=========================================================", "green"))
+                print(colored("Url:", "green"), colored(url, "blue"))
+                print(colored("Method:", "green"), colored("POST", "red"))
+                print(colored("Url Vulnerable", "red"), sec_check_req.url)
+                print(colored("Par:", "red"), input_name)
+                print(colored("Payload:", "red"), payloads)
+                print(colored("=========================================================", "green"))
+        New_open.close()
+    except:
+        pass
 def httplive(url):
     global live
     live = None
@@ -483,8 +443,8 @@ parser = argparse.ArgumentParser("""
 --country           : find Dork By Country
 --text              : Dump site text if in site
 --subdomain         : find SubDomain of site
---xss               : Scan Site if vulnerable [Xss]
---sql               : Scan Site if vulnerable [Sql]
+--xss               : Scan Site if vulnerable [Xss] url must be between double citation
+--sql               : Scan Site if vulnerable [Sql] url must be between double citation
 --listDork          : Scan list Dorks if Vulnerable [Sql]
 --RevIP             : Dump all site by ip
 --port              : Scan ports by ip
@@ -492,6 +452,8 @@ parser = argparse.ArgumentParser("""
 ex:
 BlackDir.py --spider http://google.com
 BlackDir.py --dork inurl:admin/login.php --country sa --text product
+BlackDir.py --xss "paste url here"
+BlackDir.py --sql "paste url here"
 BlackDir.py --subdomain google.com
 BlackDir.py --RevIP [ip address of server]
 BlackDir.py --port [ip address of server]
