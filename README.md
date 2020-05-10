@@ -22,6 +22,8 @@ python3 BlackDir.py
 ![help](https://user-images.githubusercontent.com/46041727/80273393-50835c00-86da-11ea-95e1-43b5bf43db5d.PNG)
 
 
+![xss_POST](https://user-images.githubusercontent.com/46041727/81505255-95240f80-92f6-11ea-900d-54e4be5c6bf9.PNG)
+
 
 
 # Version:
