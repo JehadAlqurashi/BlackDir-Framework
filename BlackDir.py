@@ -184,7 +184,6 @@ def fast_crawl(url):
                 pass
 def sql(url): #Function F0r find Sql_Injection
     try:
-        print(url)
         parametrs = []
         after_eq = []
         get = {}
