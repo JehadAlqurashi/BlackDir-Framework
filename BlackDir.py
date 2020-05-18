@@ -4,6 +4,7 @@ from urllib.parse import urlsplit
 import urllib.parse as urlparse
 from urllib.parse import parse_qs
 import os
+
 try:
     from bs4 import BeautifulSoup
 except:
@@ -72,9 +73,9 @@ def fast_crawl(url):
     global list_direct, url_access, url_source
     list_direct = []
     url_strip = url.strip("https://www.")
-    headers = {"user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0"}
+    headers = {"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0"}
     list_direct.append(url)
-    url_request = requests.get(url,headers=headers)
+    url_request = requests.get(url, headers=headers)
     url_source = BeautifulSoup(url_request.content, "html.parser")
     for link in url_source.find_all("a"):
         link_pure = link.get("href")
@@ -84,13 +85,13 @@ def fast_crawl(url):
             else:
                 if "http" not in link_pure and "https" not in link_pure and url_strip not in link_pure:
                     try:
-                        first_req = requests.get(url+link_pure)
+                        first_req = requests.get(url + link_pure)
                         if first_req.status_code == 200:
-                            print(colored("================================================================","green"))
-                            print(colored("Url:","green"),url+link_pure)
-                            print(colored("Request:","green"),first_req.status_code)
-                            print(colored("================================================================","green"))
-                            list_direct.append(url+link_pure)
+                            print(colored("================================================================", "green"))
+                            print(colored("Url:", "green"), url + link_pure)
+                            print(colored("Request:", "green"), first_req.status_code)
+                            print(colored("================================================================", "green"))
+                            list_direct.append(url + link_pure)
                         else:
                             pass
                     except requests.exceptions.ConnectionError:
@@ -101,10 +102,12 @@ def fast_crawl(url):
                             sec_req = requests.get(link_pure)
                             if sec_req.status_code == 200:
                                 if sec_req.url not in list_direct:
-                                    print(colored("================================================================","green"))
-                                    print(colored("Url:", "green"),link_pure)
+                                    print(colored("================================================================",
+                                                  "green"))
+                                    print(colored("Url:", "green"), link_pure)
                                     print(colored("Request:", "green"), sec_req.status_code)
-                                    print(colored("================================================================","green"))
+                                    print(colored("================================================================",
+                                                  "green"))
                                     list_direct.append(link_pure)
                             else:
                                 pass
@@ -112,14 +115,16 @@ def fast_crawl(url):
                             pass
                     elif "http" not in link_pure or "https" not in link_pure and url_strip in link_pure:
                         try:
-                            third_req = requests.get("http://"+link_pure)
+                            third_req = requests.get("http://" + link_pure)
                             if third_req.status_code == 200:
                                 if third_req.url not in list_direct:
-                                    print(colored("================================================================","green"))
+                                    print(colored("================================================================",
+                                                  "green"))
                                     print(colored("Url:", "green"), third_req.url)
                                     print(colored("Request:", "green"), third_req.status_code)
-                                    print(colored("================================================================","green"))
-                                    list_direct.append("http://"+link_pure)
+                                    print(colored("================================================================",
+                                                  "green"))
+                                    list_direct.append("http://" + link_pure)
                             else:
                                 pass
                         except requests.exceptions.ConnectionError:
@@ -129,10 +134,12 @@ def fast_crawl(url):
                             fourth_req = requests.get(link_pure)
                             if fourth_req.status_code == 200:
                                 if fourth_req.url not in list_direct:
-                                    print(colored("================================================================","green"))
+                                    print(colored("================================================================",
+                                                  "green"))
                                     print(colored("Url:", "green"), fourth_req.url)
                                     print(colored("Request:", "green"), fourth_req.status_code)
-                                    print(colored("================================================================","green"))
+                                    print(colored("================================================================",
+                                                  "green"))
                                     list_direct.append(fourth_req.url)
                             else:
                                 pass
@@ -142,7 +149,7 @@ def fast_crawl(url):
             pass
     for url_form_list in list_direct:
         sec_url_request = requests.get(url_form_list)
-        soup = BeautifulSoup(sec_url_request.content,"html.parser")
+        soup = BeautifulSoup(sec_url_request.content, "html.parser")
         for sec_link in soup.find_all("a"):
             sec_link = sec_link.get("href")
             try:
@@ -154,13 +161,17 @@ def fast_crawl(url):
                     else:
                         if "http" not in sec_link or "https" not in sec_link and url_strip in sec_link:
                             try:
-                                five_req = requests.get("http://"+sec_link)
+                                five_req = requests.get("http://" + sec_link)
                                 if five_req.status_code == 200:
                                     if five_req.url not in list_direct:
-                                        print(colored("================================================================","green"))
+                                        print(
+                                            colored("================================================================",
+                                                    "green"))
                                         print(colored("Url:", "green"), five_req.url)
                                         print(colored("Request:", "green"), five_req.status_code)
-                                        print(colored("================================================================","green"))
+                                        print(
+                                            colored("================================================================",
+                                                    "green"))
                                         list_direct.append(five_req.url)
                                 else:
                                     pass
@@ -171,10 +182,14 @@ def fast_crawl(url):
                                 six_req = requests.get(sec_link)
                                 if six_req.status_code == 200:
                                     if six_req.url not in list_direct:
-                                        print(colored("================================================================","green"))
+                                        print(
+                                            colored("================================================================",
+                                                    "green"))
                                         print(colored("Url:", "green"), six_req.url)
                                         print(colored("Request:", "green"), six_req.status_code)
-                                        print(colored("================================================================","green"))
+                                        print(
+                                            colored("================================================================",
+                                                    "green"))
                                         list_direct.append(six_req.url)
                                 else:
                                     pass
@@ -182,7 +197,26 @@ def fast_crawl(url):
                                 pass
             except:
                 pass
-def sql(url): #Function F0r find Sql_Injection
+
+
+def admin_panel(url):
+    file_fromat = open("link.txt", "r")
+    try:
+        for link in file_fromat:
+            Purl = url + "/" + link
+            if Purl == None:
+                exit()
+            req_link = requests.get(Purl)
+            if req_link.status_code == 200:
+                print(colored("[+]Found: ", "green"), Purl)
+            else:
+                print(colored("[-]Not Found: ", "red"), Purl)
+    except requests.exceptions.ConnectionError:
+        pass
+
+
+def sql(url):  # Function F0r find Sql_Injection
+
     try:
         parametrs = []
         after_eq = []
@@ -195,23 +229,24 @@ def sql(url): #Function F0r find Sql_Injection
             parametrs.append(par)
         for equal in value:
             for number in equal:
-                after_eq.append(number+"'")
+                after_eq.append(number + "'")
         for pars in parametrs:
             for eq in after_eq:
-                get={pars:eq}
-        get_list= list(get)
+                get = {pars: eq}
+        get_list = list(get)
         for item in get_list:
             item = item.strip()
             if item != None:
-                req = requests.get(url,params=get)
+                req = requests.get(url, params=get)
                 if "Warning" in req.text or "Database error" in req.text or "MySQL error" in req.text or "SQL syntax" in req.text:
-                    print(colored("================================================================","green"))
+                    print(colored("================================================================", "green"))
                     print(colored("SQL Injection", "red"), colored("Type:Union Based", "grey"))
                     print(colored("Url Vulnerable:", "green"), colored(req.url, "red"))
                     print(colored("================================================================", "green"))
+                    url_sql.append(req.url)
                 else:
                     print(colored("================================================================", "green"))
-                    print(colored("Url Not Vulnerable:","green"),colored(req.url,"red"))
+                    print(colored("Url Not Vulnerable:", "green"), colored(req.url, "red"))
                     print(colored("================================================================", "green"))
             else:
                 pass
@@ -220,34 +255,34 @@ def sql(url): #Function F0r find Sql_Injection
 
 
 def xss(url):  # Function FOr Find xss vulnerability
-    #GET Method
+    # GET Method
     try:
         GET = {}
-        file = open("xss_payloads.txt","r")
+        file = open("xss_payloads.txt", "r")
         parsed = urlparse.urlparse(url)
         params = urlparse.parse_qsl(parsed.query)
         for payload in file:
             payload = payload.strip()
-            for par,equeal in params:
-                GET = {par:payload}
-                check_req = requests.get(url,params=GET)
+            for par, equeal in params:
+                GET = {par: payload}
+                check_req = requests.get(url, params=GET)
                 if payload in check_req.text:
-                    print(colored("=========================================================","green"))
-                    print(colored("Url:","green"),colored(url,"blue"))
-                    print(colored("Method:","green"),colored("GET","red"))
-                    print(colored("Url Vulnerable","red"),check_req.url)
-                    print(colored("Par:","red"),par)
-                    print(colored("Payload:","red"),payload)
-                    print(colored("=========================================================","green"))
+                    print(colored("=========================================================", "green"))
+                    print(colored("Url:", "green"), colored(url, "blue"))
+                    print(colored("Method:", "green"), colored("GET", "red"))
+                    print(colored("Url Vulnerable", "red"), check_req.url)
+                    print(colored("Par:", "red"), par)
+                    print(colored("Payload:", "red"), payload)
+                    print(colored("=========================================================", "green"))
         file.close()
     except:
         pass
-    #Post Method
+    # Post Method
     try:
         POST = {}
         New_open = open("xss_payloads.txt")
         request_form = request.urlopen(url).read()
-        source = BeautifulSoup(request_form,"html.parser")
+        source = BeautifulSoup(request_form, "html.parser")
         for payloads in New_open:
             for form in source.findAll("input"):
                 if form.get('type') == "submit":
@@ -256,7 +291,7 @@ def xss(url):  # Function FOr Find xss vulnerability
                 if form.get('type') == 'text':
                     input_name = form.get('name')
                     POST[input_name] = payloads
-            sec_check_req = requests.post(url,POST)
+            sec_check_req = requests.post(url, POST)
             if payloads in sec_check_req.text:
                 print(colored("=========================================================", "green"))
                 print(colored("Url:", "green"), colored(url, "blue"))
@@ -268,6 +303,8 @@ def xss(url):  # Function FOr Find xss vulnerability
         New_open.close()
     except:
         pass
+
+
 def httplive(url):
     global live
     live = None
@@ -317,21 +354,23 @@ def spider(url, lists, secure):
         pass
 
 
-def dorks(dork, country,text):  # function for Get Dork
-    print(colored("Please Wait .. ","red"))
-    if  country != None and text == None:
-        docker = "inurl:"+dork+" site:"+country
+def dorks(dork, country, text):  # function for Get Dork
+    global url_sql
+    url_sql = []
+    print(colored("Please Wait .. ", "red"))
+    if country != None and text == None:
+        docker = "inurl:" + dork + " site:" + country
     elif country == None and text != None:
-        docker = "inurl:"+dork+" intext:"+text
+        docker = "inurl:" + dork + " intext:" + text
     elif country != None and text != None:
-        docker = "inurl:"+dork+" site:"+country+" intext:"+text
+        docker = "inurl:" + dork + " site:" + country + " intext:" + text
     else:
-        docker ="inurl:"+dork
+        docker = "inurl:" + dork
     list_of_url = []
     results = []
     user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0"
     headers = {'user-agent': user_agent}
-    link = "https://google.com/search?q="+docker
+    link = "https://google.com/search?q=" + docker
     rep = requests.get(link, headers=headers)
     if rep.status_code == 200:
         soup = BeautifulSoup(rep.content, "html.parser")
@@ -357,23 +396,46 @@ def dorks(dork, country,text):  # function for Get Dork
             sql(urls)
     else:
         pass
+    if url_sql != []:
+        line_user = input(colored("Do you want find The panel of URLs vulnerable [Y/N] : ","green"))
+        if line_user == 'y' or line_user == 'n' or line_user == "Y" or line_user == "N":
+            for url_find in url_sql:
+                url_find = url_find.strip("https://www.")
+                url_find = url_find[0:url_find.index("/")]
+                url_find = "http://"+url_find
+                try:
+                    file_admin = open("link.txt","r")
+                    for direct in file_admin:
+                        direct = direct.strip()
+                        req_admin = requests.get(url_find+"/"+direct)
+                        if req_admin.status_code == 200:
+                            print(colored("[+] Found : {0}","green").format(req_admin.url))
+                        else:
+                            print(colored("[-] Not Found : {0}","red").format(req_admin.url))
+                except requests.exceptions.ConnectionError:
+                    pass
+        else:
+            pass
+    else:
+        pass
+
 
 
 def list_dorks(file):
-    handle =open(file,"r")
+    handle = open(file, "r")
     user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0"
     headers = {'user-agent': user_agent}
-    result=[]
+    result = []
     url_hand = []
     for dork in handle:
-        print(colored("------------------------","green"))
-        print(colored("Dork:", "red"), colored(dork,"green"))
-        print(colored("------------------------","green"))
+        print(colored("------------------------", "green"))
+        print(colored("Dork:", "red"), colored(dork, "green"))
+        print(colored("------------------------", "green"))
         time.sleep(2)
-        link = "https://google.com/search?q="+dork
-        rep = requests.get(link,headers=headers)
+        link = "https://google.com/search?q=" + dork
+        rep = requests.get(link, headers=headers)
         if rep.status_code == 200:
-            soup = BeautifulSoup(rep.content,"html.parser")
+            soup = BeautifulSoup(rep.content, "html.parser")
         for g in soup.find_all('div', class_='r'):
             anchors = g.find_all('a')
             if anchors:
@@ -390,10 +452,13 @@ def list_dorks(file):
                     print(colored("Title Of Link:", "green"), list_link[0], "\n")
                     print(colored("Link:", "green"), list_link[1], "\n")
                     url_hand.append(list_link[1])
-    user = input(colored("You Want Scan All URLs [Y/N]: ", "green"))
+    user = input(colored("You Want Scan All URLs [Sql Injection] [Y/N] : ", "green"))
     if user == "Y" or user == "y" or user == None:
         for urls in url_hand:
             sql(urls)
+    else:
+        pass
+
 def sub(url, subs):  # function for gussing subdomain
     if "https" in url:
         url = url.strip("https://")
@@ -423,16 +488,20 @@ def ip_reverse(ip):
     except requests.exceptions.ConnectionError:
         print(colored("Connection Fail", "blue"))
 
+
 def scanports(ip):
     try:
         api = "https://api.hackertarget.com/nmap/?q="
-        new_api = api+ip
+        new_api = api + ip
         req_api = requests.get(new_api)
         print(req_api.text)
     except:
         pass
+
+
 def update():
-    os.system("cd .. && rm -rf BlackDir-Framework-New && mkdir BlackDir-Framework-New && cd BlackDir-Framework-New && git clone https://github.com/RedVirus0/BlackDir-Framework.git && echo 'New Directory >> ' && pwd")
+    os.system(
+        "cd .. && rm -rf BlackDir-Framework-New && mkdir BlackDir-Framework-New && cd BlackDir-Framework-New && git clone https://github.com/RedVirus0/BlackDir-Framework.git && echo 'New Directory >> ' && pwd")
 
 
 parser = argparse.ArgumentParser("""
@@ -455,7 +524,6 @@ BlackDir.py --xss "paste url here"
 BlackDir.py --sql "paste url here"
 BlackDir.py --subdomain google.com
 BlackDir.py --RevIP [ip address of server]
-BlackDir.py --port [ip address of server]
 """)
 parser.add_argument("-spider", "--spider")
 parser.add_argument("-list", "--list")
@@ -469,6 +537,8 @@ parser.add_argument("-listDork", "--listDork")
 parser.add_argument("-update", "--update")
 parser.add_argument("-RevIP", "--RevIP")
 parser.add_argument("-port", "--port")
+parser.add_argument("-shell", "--shell")
+parser.add_argument("-connect_shell", "--connect_shell")
 args = parser.parse_args()
 secure = None
 listuser = args.list
@@ -491,6 +561,8 @@ list_dork = args.listDork
 updates = args.update
 sublist = open("sub.txt", "r")
 site = args.country
+generate = args.shell
+connect_backdoor = args.connect_shell
 if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None:
     dorks(dork, site, text)
 elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None:
