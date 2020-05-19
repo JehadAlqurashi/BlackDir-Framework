@@ -4,7 +4,7 @@ from urllib.parse import urlsplit
 import urllib.parse as urlparse
 from urllib.parse import parse_qs
 import os
-
+from socket import gethostbyname
 try:
     from bs4 import BeautifulSoup
 except:
@@ -71,6 +71,9 @@ C0ded By RedVirus[@redvirus0]
 
 def fast_crawl(url):
     global list_direct, url_access, url_source
+    ip = url.strip("https://www.")
+    print("Domain:",url)
+    print("IP:",gethostbyname(ip))
     list_direct = []
     url_strip = url.strip("https://www.")
     headers = {"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0"}
@@ -353,6 +356,11 @@ def spider(url, lists, secure):
     else:
         pass
 
+def html_injection(url):
+    parsed = urlparse.urlparse(url)
+    params = urlparse.parse_qsl(parsed.query)
+    for par,equal in params:
+        print(par,equal)
 
 def dorks(dork, country, text):  # function for Get Dork
     global url_sql
