@@ -3,7 +3,7 @@
  <p>[2] Find Sub Domain<br></p>
   <p>[3] Advanced Dorks Search </p>
   <p>[4] Scan list of Dorks </p>
- <p>[5] Scan WebSites [Xss,Sql] </p>
+ <p>[5] Scan WebSites [Xss,Sql,Html Inj] </p>
  <p>[6] Reverse Ip Lookup </p>
  <p>[7] Port Scan </p>
 <h1>Installation:</h1>
