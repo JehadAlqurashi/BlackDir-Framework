@@ -274,7 +274,7 @@ def xss(url):  # Function FOr Find xss vulnerability
                     print(colored("Url:", "green"), colored(url, "blue"))
                     print(colored("Method:", "green"), colored("GET", "red"))
                     print(colored("Url Vulnerable", "red"), check_req.url)
-                    print(colored("Par:", "red"), par)
+                    print(colored("Parameter:", "red"), par)
                     print(colored("Payload:", "red"), payload)
                     print(colored("=========================================================", "green"))
         file.close()
@@ -357,10 +357,57 @@ def spider(url, lists, secure):
         pass
 
 def html_injection(url):
-    parsed = urlparse.urlparse(url)
-    params = urlparse.parse_qsl(parsed.query)
-    for par,equal in params:
-        print(par,equal)
+    # GET
+    try:
+        file = open("html_payloads.txt", "r")
+        GET = {}
+        parsed = urlparse.urlparse(url)
+        params = urlparse.parse_qsl(parsed.query)
+        for payload in file:
+            payload = payload.strip()
+            for par,equal in params:
+                print(colored(par,"green"),"=",colored(equal,"green"))
+                GET={par:payload}
+                req = requests.get(url,params=GET)
+                if payload in req.text:
+                    print(colored("=========================================================", "green"))
+                    print(colored("Url:", "green"), colored(url, "blue"))
+                    print(colored("Method:", "green"), colored("GET", "red"))
+                    print(colored("Url Vulnerable", "red"), req.url)
+                    print(colored("Parameter:", "red"), par)
+                    print(colored("Payload:", "red"), payload)
+                    print(colored("=========================================================", "green"))
+        file.close()
+
+    except:
+        pass
+    #POST
+    try:
+        POST = {}
+        file_payloads = open("html_payloads.txt")
+        request_form = request.urlopen(url).read()
+        source = BeautifulSoup(request_form, "html.parser")
+        for payload in file_payloads:
+            for form in source.findAll("input"):
+                if form.get('type') == "submit":
+                    input_submit = form.get('name')
+                    POST[input_submit] = payload
+                if form.get('type') == 'text':
+                    input_name = form.get('name')
+                    POST[input_name] = payload
+            req_check = requests.post(url, POST)
+            if payload in req_check.text:
+                print(colored("=========================================================", "green"))
+                print(colored("Url:", "green"), colored(url, "blue"))
+                print(colored("Method:", "green"), colored("POST", "red"))
+                print(colored("Url Vulnerable", "red"), req_check.url)
+                print(colored("Parameter:", "red"), input_name)
+                print(colored("Payload:", "red"), payload)
+                print(colored("=========================================================", "green"))
+        file_payloads.close()
+    except:
+        pass
+
 
 def dorks(dork, country, text):  # function for Get Dork
     global url_sql
@@ -398,7 +445,7 @@ def dorks(dork, country, text):  # function for Get Dork
         print(colored("Title Of Link:", "green"), list_of_link[0], "\n")
         print(colored("Link:", "green"), list_of_link[1], "\n")
         list_of_url.append(list_of_link[1])
-    line = input(colored("You Want Scan All URLs [Y/N]: ", "green"))
+    line = input(colored("You Want Scan All URLs [Sql Injection] [Y/N]: ", "green"))
     if line == "Y" or line == "y" or line == None:
         for urls in list_of_url:
             sql(urls)
@@ -436,9 +483,9 @@ def list_dorks(file):
     result = []
     url_hand = []
     for dork in handle:
-        print(colored("------------------------", "green"))
-        print(colored("Dork:", "red"), colored(dork, "green"))
-        print(colored("------------------------", "green"))
+        print(colored("========================================", "green"))
+        print(colored("Dork:", "green"), colored(dork, "red"))
+        print(colored("========================================", "green"))
         time.sleep(2)
         link = "https://google.com/search?q=" + dork
         rep = requests.get(link, headers=headers)
@@ -521,6 +568,7 @@ parser = argparse.ArgumentParser("""
 --subdomain         : find SubDomain of site
 --xss               : Scan Site if vulnerable [Xss] url must be between double citation
 --sql               : Scan Site if vulnerable [Sql] url must be between double citation
+--HTMLinj           : Scan site if vulnerable [html injection] url must be between double citation
 --listDork          : Scan list Dorks if Vulnerable [Sql]
 --RevIP             : Dump all site by ip
 --port              : Scan ports by ip
@@ -541,12 +589,11 @@ parser.add_argument("-subdomain", "--subdomain")
 parser.add_argument("-xss", "--xss")
 parser.add_argument("-text", "--text")
 parser.add_argument("-sql", "--sql")
+parser.add_argument("-HTMLinj","--HTMLinj")
 parser.add_argument("-listDork", "--listDork")
 parser.add_argument("-update", "--update")
 parser.add_argument("-RevIP", "--RevIP")
 parser.add_argument("-port", "--port")
-parser.add_argument("-shell", "--shell")
-parser.add_argument("-connect_shell", "--connect_shell")
 args = parser.parse_args()
 secure = None
 listuser = args.list
@@ -567,31 +614,32 @@ text = args.text
 sql_inection = args.sql
 list_dork = args.listDork
 updates = args.update
+html = args.HTMLinj
 sublist = open("sub.txt", "r")
 site = args.country
-generate = args.shell
-connect_backdoor = args.connect_shell
-if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None:
+if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None:
     dorks(dork, site, text)
-elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None:
+elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None:
     spider(url, listuser, secure)
-elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None:
+elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None:
     sub(subdomains, sublist)
-elif scanner != None and url == None and dork == None and subdomains == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None:
+elif scanner != None and url == None and dork == None and subdomains == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None:
     xss(scanner)
-elif sql_inection != None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None:
+elif sql_inection != None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html == None:
     sql(sql_inection)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork != None and updates == None and ip == None and portscan == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork != None and updates == None and ip == None and portscan == None and html == None:
     list_dorks(list_dork)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates != None and ip == None and portscan == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates != None and ip == None and portscan == None and html == None:
     if updates == "check" or updates == "Check":
         update()
     else:
         print(colored("Error ! Please Enter --update check", "red"))
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip != None and portscan == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip != None and portscan == None and html == None:
     ip_reverse(ip)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan != None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan != None and html == None:
     scanports(portscan)
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html != None:
+    html_injection(html)
 
 else:
     logo()
