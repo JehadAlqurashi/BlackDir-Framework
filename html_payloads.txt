@@ -1,0 +1,3 @@
+<h1>test_html_injection</h1>
+<p>test_html_injection</p>
+<a href="#inject_html>test_html_injection</a>
