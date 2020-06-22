@@ -6,6 +6,13 @@
  <p>[5] Scan WebSites [Xss,Sql,Html Inj] </p>
  <p>[6] Reverse Ip Lookup </p>
  <p>[7] Port Scan </p>
+
+<h1>Installation python3 on linux</h1>
+<pre>
+apt update
+apt install python3-pip
+</pre>
+
 <h1>Installation:</h1>
 <pre>
 git clone https://github.com/RedVirus0/BlackDir-Framework.git
