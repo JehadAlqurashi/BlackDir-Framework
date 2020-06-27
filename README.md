@@ -7,7 +7,7 @@
  <p>[6] Reverse Ip Lookup </p>
  <p>[7] Port Scan </p>
 
-<h1>Installation python3 on linux</h1>
+<h1>Install python3 on linux</h1>
 <pre>
 apt update
 apt install python3-pip
