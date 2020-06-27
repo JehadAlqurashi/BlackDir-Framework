@@ -1,5 +1,6 @@
 import time
 from urllib import request
+from hashlib import md5,sha1,sha256,sha512
 from urllib.parse import urlsplit
 import urllib.parse as urlparse
 from urllib.parse import parse_qs
@@ -558,7 +559,25 @@ def update():
     os.system(
         "cd .. && rm -rf BlackDir-Framework-New && mkdir BlackDir-Framework-New && cd BlackDir-Framework-New && git clone https://github.com/RedVirus0/BlackDir-Framework.git && echo 'New Directory >> ' && pwd")
 
-
+def hash_en(word,hash_type):
+    word = word.strip()
+    hash_type = hash_type.strip()
+    if hash_type == "md5":
+        word = md5(word.encode()).hexdigest()
+        print(colored("Type: ","red"),hash_type)
+        print(colored("Hash :","green"),word)
+    elif hash_type == "sha1":
+        word = sha1(word.encode()).hexdigest()
+        print(colored("Type: ","red"),hash_type)
+        print(colored("Hash :","green"),word)
+    elif hash_type == "sha256":
+        word = sha256(word.encode()).hexdigest()
+        print(colored("Type: ", "red"), hash_type)
+        print(colored("Hash :", "green"), word)
+    elif hash_type == "sha512":
+        word = sha512(word.encode()).hexdigest()
+        print(colored("Type: ", "red"), hash_type)
+        print(colored("Hash :", "green"), word)
 parser = argparse.ArgumentParser("""
 --spider            : Url to find Directory
 --list              : If you have list
@@ -573,13 +592,20 @@ parser = argparse.ArgumentParser("""
 --RevIP             : Dump all site by ip
 --port              : Scan ports by ip
 --update            : Update Tool ex: --update check
+--word              : word you want encrypt
+--type              : select hash type like:md5,sha1,sha256,sha512
 ex:
-BlackDir.py --spider http://google.com
-BlackDir.py --dork inurl:admin/login.php --country sa --text product
-BlackDir.py --xss "paste url here"
-BlackDir.py --sql "paste url here"
-BlackDir.py --subdomain google.com
-BlackDir.py --RevIP [ip address of server]
+python3 BlackDir.py --spider http://google.com
+python3 BlackDir.py --dork inurl:admin/login.php --country sa --text product
+python3 BlackDir.py --xss "paste url here"
+python3 BlackDir.py --sql "paste url here"
+python3 BlackDir.py --subdomain google.com
+python3 BlackDir.py --RevIP [ip address of server]
+python3 BlackDir.py --word redvirus --type md5
+python3 BlackDir.py --word redvirus --type sha1
+python3 BlackDir.py --word redvirus --type sha256
+python3 BlackDir.py --word redvirus --type sha512
+
 """)
 parser.add_argument("-spider", "--spider")
 parser.add_argument("-list", "--list")
@@ -594,6 +620,8 @@ parser.add_argument("-listDork", "--listDork")
 parser.add_argument("-update", "--update")
 parser.add_argument("-RevIP", "--RevIP")
 parser.add_argument("-port", "--port")
+parser.add_argument("-type","--type")
+parser.add_argument("-word","--word")
 args = parser.parse_args()
 secure = None
 listuser = args.list
@@ -617,29 +645,33 @@ updates = args.update
 html = args.HTMLinj
 sublist = open("sub.txt", "r")
 site = args.country
-if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None:
+hash_type = args.type
+user_word = args.word
+if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None:
     dorks(dork, site, text)
-elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None:
+elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None:
     spider(url, listuser, secure)
-elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None:
+elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None:
     sub(subdomains, sublist)
-elif scanner != None and url == None and dork == None and subdomains == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None:
+elif scanner != None and url == None and dork == None and subdomains == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None:
     xss(scanner)
-elif sql_inection != None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html == None:
+elif sql_inection != None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None:
     sql(sql_inection)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork != None and updates == None and ip == None and portscan == None and html == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork != None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None:
     list_dorks(list_dork)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates != None and ip == None and portscan == None and html == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates != None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None:
     if updates == "check" or updates == "Check":
         update()
     else:
         print(colored("Error ! Please Enter --update check", "red"))
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip != None and portscan == None and html == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip != None and portscan == None and html == None and hash_type == None and user_word ==None:
     ip_reverse(ip)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan != None and html == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan != None and html == None and hash_type == None and user_word ==None:
     scanports(portscan)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html != None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html != None and hash_type == None and user_word ==None:
     html_injection(html)
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type != None and user_word !=None:
+    hash_en(user_word,hash_type)
 
 else:
     logo()
