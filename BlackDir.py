@@ -620,6 +620,7 @@ python3 BlackDir.py --xss "paste url here"
 python3 BlackDir.py --sql "paste url here"
 python3 BlackDir.py --subdomain google.com
 python3 BlackDir.py --RevIP [ip address of server]
+python3 BlackDir.py --word redvirus --type md4
 python3 BlackDir.py --word redvirus --type md5
 python3 BlackDir.py --word redvirus --type sha1
 python3 BlackDir.py --word redvirus --type sha256
