@@ -1,4 +1,4 @@
-![Untitled-222221111](https://user-images.githubusercontent.com/46041727/85945248-243bc400-b945-11ea-9d71-52a0b5c67495.png)
+https://cdn.discordapp.com/attachments/668224609895710787/726748389802377276/Untitled-2222.png
 <h1 align="center">BlackDir-Framework</h1>
  <p>[1] Spider Directories<br></p>
  <p>[2] Find Sub Domain<br></p>
