@@ -1,4 +1,4 @@
-https://cdn.discordapp.com/attachments/668224609895710787/726748389802377276/Untitled-2222.png
+
 <h1 align="center">BlackDir-Framework</h1>
  <p>[1] Spider Directories<br></p>
  <p>[2] Find Sub Domain<br></p>
