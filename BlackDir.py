@@ -1,6 +1,15 @@
+"""
+    BlackDir-Framework Project
+    author:RedVirus Twitter:r00t_kit insta:redvirus0
+    author:Ali Twitter:bc_zQ
+
+    Thx for all use this project
+
+
+"""
 import time
 from urllib import request
-from hashlib import md5,sha1,sha256,sha512
+from hashlib import *
 from urllib.parse import urlsplit
 import urllib.parse as urlparse
 from urllib.parse import parse_qs
@@ -64,8 +73,6 @@ def logo():
  -----------------------------------------------------------------------------------------------------------
  
 help: python3 BlackDir.py -h
-=================================
-C0ded By RedVirus[@redvirus0]
                                                                                                                 
 """)
 
@@ -576,6 +583,18 @@ def hash_en(word,hash_type):
         print(colored("Hash :", "green"), word)
     elif hash_type == "sha512":
         word = sha512(word.encode()).hexdigest()
+        print(colored("Type: ", "red"), hash_type)
+        print(colored("Hash :", "green"), word)
+    elif hash_type == "sha224":
+        word = sha224(word.encode()).hexdigest()
+        print(colored("Type: ", "red"), hash_type)
+        print(colored("Hash :", "green"), word)
+    elif hash_type == "sha384":
+        word = sha384(word.encode()).hexdigest()
+        print(colored("Type: ", "red"), hash_type)
+        print(colored("Hash :", "green"), word)
+    elif hash_type == "md4":
+        word = new('md4', word.encode()).hexdigest()
         print(colored("Type: ", "red"), hash_type)
         print(colored("Hash :", "green"), word)
 parser = argparse.ArgumentParser("""
