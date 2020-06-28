@@ -1,4 +1,4 @@
-![Untitled-222221111](https://user-images.githubusercontent.com/46041727/85945379-133f8280-b946-11ea-83c1-744ec36c8c03.png)
+![Untitled-hhhhhh](https://user-images.githubusercontent.com/46041727/85945410-2eaa8d80-b946-11ea-8c51-68c41235bf3a.png)
 <h1 align="center">BlackDir-Framework</h1>
  <p>[1] Spider Directories<br></p>
  <p>[2] Find Sub Domain<br></p>
