@@ -272,17 +272,30 @@ def xss(url):  # Function FOr Find xss vulnerability
         file = open("xss_payloads.txt", "r")
         parsed = urlparse.urlparse(url)
         params = urlparse.parse_qsl(parsed.query)
+        print(colored("Parameters in Link:","red"),colored(params[0],"green"))
+        print(colored("Please wait we check if parameters vulnerable ","red"))
+        time.sleep(5)
         for payload in file:
             payload = payload.strip()
             for par, equeal in params:
                 GET = {par: payload}
                 check_req = requests.get(url, params=GET)
                 if payload in check_req.text:
+                    time.sleep(2)
                     print(colored("=========================================================", "green"))
                     print(colored("Url:", "green"), colored(url, "blue"))
                     print(colored("Method:", "green"), colored("GET", "red"))
                     print(colored("Url Vulnerable", "red"), check_req.url)
-                    print(colored("Parameter:", "red"), par)
+                    print(colored("Parameter Vulnerable:", "red"), par)
+                    print(colored("Payload:", "red"), payload)
+                    print(colored("=========================================================", "green"))
+                else:
+                    time.sleep(2)
+                    print(colored("=========================================================", "green"))
+                    print(colored("Url:", "green"), colored(url, "blue"))
+                    print(colored("Method:", "green"), colored("GET", "red"))
+                    print(colored("Url Not Vulnerable", "green"), check_req.url)
+                    print(colored("Parameter Not Vulnerable:", "green"), par)
                     print(colored("Payload:", "red"), payload)
                     print(colored("=========================================================", "green"))
         file.close()
@@ -304,13 +317,24 @@ def xss(url):  # Function FOr Find xss vulnerability
                     POST[input_name] = payloads
             sec_check_req = requests.post(url, POST)
             if payloads in sec_check_req.text:
+                time.sleep(2)
                 print(colored("=========================================================", "green"))
                 print(colored("Url:", "green"), colored(url, "blue"))
                 print(colored("Method:", "green"), colored("POST", "red"))
                 print(colored("Url Vulnerable", "red"), sec_check_req.url)
-                print(colored("Par:", "red"), input_name)
+                print(colored("Parameter Vulnerable:", "red"), input_name)
                 print(colored("Payload:", "red"), payloads)
                 print(colored("=========================================================", "green"))
+            else:
+                time.sleep(2)
+                print(colored("=========================================================", "green"))
+                print(colored("Url:", "green"), colored(url, "blue"))
+                print(colored("Method:", "green"), colored("POST", "red"))
+                print(colored("Url Not Vulnerable", "green"), sec_check_req.url)
+                print(colored("Parameter Not Vulnerable:", "green"), input_name)
+                print(colored("=========================================================", "green"))
+
+
         New_open.close()
     except:
         pass
