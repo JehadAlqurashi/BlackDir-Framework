@@ -627,14 +627,22 @@ def hash_identifier(hashing):
     hashing = hashing.strip()
     if len(hashing) == 32:
         print(colored("Hash Type:","green"),colored("md5 or md4","red"))
+        print(colored("Bit length:","green"),32*4)
     elif len(hashing) == 40:
         print(colored("Hash Type:","green"),colored("sha1","red"))
+        print(colored("Bit length:","green"),40*4)
     elif len(hashing) == 64:
         print(colored("Hash Type:", "green"), colored("sha256", "red"))
+        print(colored("Bit length:"),64*4)
     elif len(hashing) == 96:
         print(colored("Hash Type:", "green"), colored("sha384", "red"))
+        print(colored("Bit length:"), 96 * 4)
     elif len(hashing) == 56:
         print(colored("Hash Type:", "green"), colored("sha224", "red"))
+        print(colored("Bit length:"), 56 * 4)
+    elif len(hashing) == 128:
+        print(colored("Hash Type:", "green"), colored("sha512", "red"))
+        print(colored("Bit length:"), 128 * 4)
     else:
         print(colored("Not Found !","red"))
 
