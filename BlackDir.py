@@ -1,6 +1,6 @@
 """
     BlackDir-Framework Project
-    author:RedVirus Twitter:r00t_kit insta:redvirus0
+    author:RedVirus Twitter:RedVirus_0 insta:redvirus0
     author:Ali Twitter:bc_zQ
 
     Thx for all use this project
@@ -444,6 +444,7 @@ def html_injection(url):
 def dorks(dork, country, text):  # function for Get Dork
     global url_sql
     url_sql = []
+
     print(colored("Please Wait .. ", "red"))
     if country != None and text == None:
         docker = "inurl:" + dork + " site:" + country
@@ -477,6 +478,11 @@ def dorks(dork, country, text):  # function for Get Dork
         print(colored("Title Of Link:", "green"), list_of_link[0], "\n")
         print(colored("Link:", "green"), list_of_link[1], "\n")
         list_of_url.append(list_of_link[1])
+    file_dork = open("Site_From_Dork.txt","w")
+    for url_find in list_of_url:
+        file_dork.write(url_find+"\n")
+    file_dork.close()
+    print(colored("All Site Save On: ","red"),colored(os.getcwd()+"/"+"Site_From_Dork.txt","green"))
     line = input(colored("You Want Scan All URLs [Sql Injection] [Y/N]: ", "green"))
     if line == "Y" or line == "y" or line == None:
         for urls in list_of_url:
