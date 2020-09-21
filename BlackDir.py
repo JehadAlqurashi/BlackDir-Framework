@@ -760,7 +760,6 @@ parser = argparse.ArgumentParser("""
 --wordpress         : link the site for BruteForce
 --ListPassword      : Directory For Your Password List
 --ListUsername      : Directory For Your Username List
---enum              : For Extract Username By Enumreate
 ex:
 python3 BlackDir.py --spider http://google.com
 python3 BlackDir.py --dork inurl:admin/login.php --country sa --text product
@@ -778,7 +777,6 @@ python3 BlackDir.py --wordpress http://ebase.com/
 python3 BlackDir.py --wordpress http://ebase.com/ --ListUsername /root/Desktop/users.txt --ListPassowrd /root/Desktop/pass.txt
 python3 BlackDir.py --wordpress http://ebase.com/ --ListUsername /root/Desktop/users.txt 
 python3 BlackDir.py --wordpress http://ebase.com/ --ListPassword /root/Desktop/pass.txt
-python3 BlackDir.py --wordpress http://ebase.com/ --enum use
 
 
 """)
