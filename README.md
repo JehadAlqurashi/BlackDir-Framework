@@ -9,8 +9,9 @@
  <p>[6] Reverse Ip Lookup </p>
  <p>[7] Port Scan </p>
  <p>[8] Brute Force Wordpress </p>
- <p>[9] Hash Encryption[md4,md5,sha1,sha256,sha384,sha512] </p>
- <p>[10] Hash Identifier</p>
+ <p>[9] Wordpress User Enumerate </p>
+ <p>[10] Hash Encryption[md4,md5,sha1,sha256,sha384,sha512] </p>
+ <p>[11] Hash Identifier</p>
 <h1>Install python3 on linux</h1>
 <pre>
 apt update
