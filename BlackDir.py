@@ -670,10 +670,11 @@ def wordpress(url,username,password,enum):
     user = None
     user_json = url+"/wp-json/wp/v2/users"
     print(colored("[!] Start Brute Force","red"))
-    print(colored("[!] Start Enumeration", "red"))
+
     time.sleep(2)
     if enum == "use" or "Use":
         user =enumerate(user_json)
+        print(colored("[!] Start Enumeration", "red"))
     if user!=None and password == None :
         user_list.append(user)
         print(colored("[+] Found User:","green"),user)
@@ -760,6 +761,8 @@ parser = argparse.ArgumentParser("""
 --wordpress         : link the site for BruteForce
 --ListPassword      : Directory For Your Password List
 --ListUsername      : Directory For Your Username List
+--enum              : Wordpress User Enumerate 
+
 ex:
 python3 BlackDir.py --spider http://google.com
 python3 BlackDir.py --dork inurl:admin/login.php --country sa --text product
@@ -777,6 +780,8 @@ python3 BlackDir.py --wordpress http://ebase.com/
 python3 BlackDir.py --wordpress http://ebase.com/ --ListUsername /root/Desktop/users.txt --ListPassowrd /root/Desktop/pass.txt
 python3 BlackDir.py --wordpress http://ebase.com/ --ListUsername /root/Desktop/users.txt 
 python3 BlackDir.py --wordpress http://ebase.com/ --ListPassword /root/Desktop/pass.txt
+python3 BlackDir.py --wordpress https://everythingrevelstoke.com --enum use
+
 
 
 """)
